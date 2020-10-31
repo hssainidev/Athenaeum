@@ -2,11 +2,11 @@ package com.example.athenaeum;
 
 import java.util.ArrayList;
 
-public class User {
+public class User{
     private ArrayList<Book> books;
     private AthenaeumProfile profile;
-    public User(String username, String password, String email) {
-        profile=new AthenaeumProfile(username, password, email);
+    public User(AthenaeumProfile profile) {
+        this.profile=profile;
         books=new ArrayList<>();
     }
 
@@ -24,5 +24,9 @@ public class User {
 
     public void setProfile(AthenaeumProfile profile) {
         this.profile = profile;
+    }
+
+    public void addBook(Book book) {
+        books.add(book);
     }
 }

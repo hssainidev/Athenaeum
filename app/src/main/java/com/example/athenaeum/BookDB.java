@@ -22,7 +22,7 @@ public class BookDB {
     }
     public void addBook(Book book) {
         final Book book1=book;
-        booksDB.collection("books")
+        booksDB.collection("Books")
                 .add(book)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
