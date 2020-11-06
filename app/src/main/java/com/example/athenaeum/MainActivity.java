@@ -79,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
                             // If logout is clicked, sign the user out and end the activity.
                             userAuth.signOut();
                             finish();
+                        } else if (menuItem.getItemId() == R.id.menu_profile) {
+                            AthenaeumProfile profile = new AthenaeumProfile("Test Username", "Test Name", "testtest", "1234567890", "test@test.com");
+                            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("profile", profile);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
                         }
                         return true;
                     }
