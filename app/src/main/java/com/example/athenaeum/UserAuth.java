@@ -17,9 +17,8 @@ public class UserAuth {
     public Task<AuthResult> addUser(AthenaeumProfile profile) {
         return userAuth.createUserWithEmailAndPassword(profile.getEmail(), profile.getPassword());
     }
-    public Task<AuthResult> signIn(AthenaeumProfile profile) {
-        Task<AuthResult> task =userAuth.signInWithEmailAndPassword(profile.getEmail(), profile.getPassword());
-        return userAuth.signInWithEmailAndPassword(profile.getEmail(), profile.getPassword());
+    public Task<AuthResult> signIn(String email, String password) {
+        return userAuth.signInWithEmailAndPassword(email, password);
 
     }
 }
