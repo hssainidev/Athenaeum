@@ -50,11 +50,9 @@ public class UserDB {
                     }
                 });
     }
-    public User getUser(String uid) {
-
-        DocumentReference userRef=usersDB.collection("Users").document(uid);
-        return (User)userRef.get().getResult().get("UserObject");
-
+    public Task<DocumentSnapshot> getUser(String uid) {
+        DocumentReference userRef = this.getCollection().document(uid);
+        return userRef.get();
     }
 
 }

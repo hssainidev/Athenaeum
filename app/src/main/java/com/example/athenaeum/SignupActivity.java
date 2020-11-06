@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
 public class SignupActivity extends AppCompatActivity {
+
+    // Initialize edit texts.
     EditText username;
     EditText email;
     EditText password;
@@ -25,10 +27,13 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        // Initialize listener for signup button
         final Button signupButton = findViewById(R.id.buttonSignup);
         signupButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Do checking for data entered in the text boxes.
+                // Check that all the data is valid on the client side.
+
+                // Retrieve the username text and make sure that something was entered
                 username = findViewById(R.id.signupUsername);
                 String usernameText = username.getText().toString();
                 if (usernameText.length() == 0) {
@@ -36,6 +41,8 @@ public class SignupActivity extends AppCompatActivity {
                     return;
                 }
 
+                // Retrieve the email text and make sure that something was entered
+                // that has at least an @ symbol and a . symbol.
                 email = findViewById(R.id.signupEmail);
                 String emailText = email.getText().toString();
                 if (emailText.length() == 0 || emailText.indexOf('@') == -1 || emailText.indexOf('.') == -1) {
@@ -43,6 +50,8 @@ public class SignupActivity extends AppCompatActivity {
                     return;
                 }
 
+                // Retrieve the password texts and make sure that something was entered.
+                // Also check and make sure that the passwords match.
                 password = findViewById(R.id.signupPassword);
                 String passwordText = password.getText().toString();
                 passwordConfirm = findViewById(R.id.signupPasswordConfirm);
@@ -52,6 +61,7 @@ public class SignupActivity extends AppCompatActivity {
                     return;
                 }
 
+                // Initialize the authorization of a new user.
                 UserAuth auth = new UserAuth();
                 final UserDB db = new UserDB();
                 AthenaeumProfile profile = new AthenaeumProfile(usernameText, passwordText, emailText);
@@ -61,6 +71,8 @@ public class SignupActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            // If authorizing the new user was successful, add the user to the database,
+                            // then clear the signup activity and navigate to the home screen.
                             db.addUser(user, task.getResult().getUser().getUid());
 
                             username.setText("");
@@ -71,6 +83,7 @@ public class SignupActivity extends AppCompatActivity {
                             Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                             startActivity(intent);
                         } else {
+                            // Otherwise, display an error.
                             Toast.makeText(SignupActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }

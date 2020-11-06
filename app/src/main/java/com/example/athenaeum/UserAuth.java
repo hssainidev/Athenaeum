@@ -19,8 +19,16 @@ public class UserAuth {
     public Task<AuthResult> addUser(AthenaeumProfile profile) {
         return userAuth.createUserWithEmailAndPassword(profile.getEmail(), profile.getPassword());
     }
+
     public Task<AuthResult> signIn(String email, String password) {
         return userAuth.signInWithEmailAndPassword(email, password);
+    }
 
+    public FirebaseUser getUser() {
+        return userAuth.getCurrentUser();
+    }
+
+    public void signOut() {
+        userAuth.signOut();
     }
 }
