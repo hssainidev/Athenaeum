@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Athenaeum</string>
-    <string name="user_title">placeholder</string>
+    <string name="profile_title">%s\'s Profile</string>
 </resources>

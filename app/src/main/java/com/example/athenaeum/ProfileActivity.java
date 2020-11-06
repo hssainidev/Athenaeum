@@ -1,5 +1,6 @@
 package com.example.athenaeum;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -8,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ProfileActivity extends AppCompatActivity{
 
-    String title;
+    TextView title;
     TextView username;
     TextView name;
     TextView phoneNum;
@@ -23,9 +24,8 @@ public class ProfileActivity extends AppCompatActivity{
 
         AthenaeumProfile profile = (AthenaeumProfile) getIntent().getExtras().getSerializable("profile");
 
-        title = profile.getUsername() + "'s Profile";
-
-        toolbar.setTitle(title);
+        title = findViewById(R.id.profile_toolbar_title);
+        title.setText(getString(R.string.profile_title, profile.getUsername()));
 
         username = findViewById(R.id.profile_username);
         name = findViewById(R.id.profile_name);
