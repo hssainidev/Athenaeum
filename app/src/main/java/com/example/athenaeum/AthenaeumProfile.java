@@ -1,13 +1,19 @@
 package com.example.athenaeum;
 
-public class AthenaeumProfile {
+import java.io.Serializable;
+
+public class AthenaeumProfile implements Serializable {
     private String username;
+    private String name;
     private String password;
+    private String phoneNum;
     private String email;
 
-    public AthenaeumProfile(String username, String password, String email) {
+    public AthenaeumProfile(String username, String name, String password, String phoneNum, String email) {
         this.username = username;
+        this.name = name;
         this.password = password;
+        this.phoneNum = phoneNum;
         this.email = email;
     }
 
@@ -19,12 +25,28 @@ public class AthenaeumProfile {
         this.username = username;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 
     public String getEmail() {
