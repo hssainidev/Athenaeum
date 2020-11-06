@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         // Retrieve the information for the books and add it to the books list.
-        final CollectionReference collectionReference = bookDB.getCollection();
+        final CollectionReference collectionReference = booksDB.getCollection();
 
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
