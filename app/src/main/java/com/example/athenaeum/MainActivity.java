@@ -1,5 +1,6 @@
 package com.example.athenaeum;
 
+import android.widget.AdapterView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,7 +57,32 @@ public class MainActivity extends AppCompatActivity {
 
         bookAdapter = new CustomBookList(this, bookDataList);
 
+
+        // For testing only.
+        Book book1 = new Book("2472374", "Asdf Qwerty", "Lorem Ipsum");
+        Book book2 = new Book("34727348", "Asdf Qwerty", "Dolor Sit Amet");
+        Book book3 = new Book("34727347", "Asdf Qwerty", "Bees");
+        book1.setDescription("Desc1");
+        book2.setDescription("Desc2");
+        book3.setDescription("Desc3");
+        book1.setStatus("available");
+        book2.setStatus("requested");
+        book3.setStatus("borrowed");
+        bookDataList.add(book1);
+        bookDataList.add(book2);
+        bookDataList.add(book3);
+
         bookList.setAdapter(bookAdapter);
+
+        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Book book = (Book) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(MainActivity.this, BookInfo.class);
+                intent.putExtra("BOOK", book);
+                startActivity(intent);
+            }
+        });
 
         // Initialize the controller for the navigation menu.
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
