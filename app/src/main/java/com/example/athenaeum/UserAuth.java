@@ -11,9 +11,11 @@ import java.util.HashMap;
 
 public class UserAuth {
     private FirebaseAuth userAuth;
+
     public UserAuth() {
-        userAuth=FirebaseAuth.getInstance();
+        userAuth = FirebaseAuth.getInstance();
     }
+
     public Task<AuthResult> addUser(AthenaeumProfile profile) {
         return userAuth.createUserWithEmailAndPassword(profile.getEmail(), profile.getPassword());
     }

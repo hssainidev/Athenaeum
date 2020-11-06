@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,10 +20,17 @@ import static android.content.ContentValues.TAG;
 
 public class UserDB {
     private ArrayList<User> users;
+
     private FirebaseFirestore usersDB;
+
     public UserDB() {
-        usersDB=FirebaseFirestore.getInstance();
+        usersDB = FirebaseFirestore.getInstance();
     }
+
+    public CollectionReference getCollection() {
+        return usersDB.collection("Users");
+    }
+
     public void addUser(User user, String uid) {
         final User user1=user;
         HashMap<String, User> data=new HashMap<>();

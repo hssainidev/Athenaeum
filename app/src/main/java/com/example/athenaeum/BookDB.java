@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -18,8 +19,13 @@ public class BookDB {
     private ArrayList<Book> books;
 
     public BookDB() {
-        booksDB=FirebaseFirestore.getInstance();
+        booksDB = FirebaseFirestore.getInstance();
     }
+
+    public CollectionReference getCollection() {
+        return booksDB.collection("Books");
+    }
+
     public void addBook(Book book) {
         final Book book1=book;
         booksDB.collection("Books")
