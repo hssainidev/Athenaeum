@@ -50,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
         bookAdapter = new CustomBookList(this, bookDataList);
 
         // For testing only.
-        Book book1 = new Book("2472374", "Asdf Qwerty", "Lorem Ipsum");
+        /* Book book1 = new Book("2472374", "Asdf Qwerty", "Lorem Ipsum");
         Book book2 = new Book("34727348", "Asdf Qwerty", "Dolor Sit Amet");
 
         bookDataList.add(book1);
-        bookDataList.add(book2);
+        bookDataList.add(book2);*/
 
         bookList.setAdapter(bookAdapter);
 
@@ -80,26 +80,27 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        // Access a Cloud Firestore instance from your Activity
-        /*FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        final CollectionReference collectionReference = db.collection("Books");
+        BookDB bookDB = new BookDB();
+        final CollectionReference collectionReference = bookDB.getCollection();
 
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
                     FirebaseFirestoreException error) {
+                if (error != null) {
+                    return;
+                }
                 bookDataList.clear();
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
                     Log.d(TAG, String.valueOf(doc.getData().get("ISBN")));
-                    String ISBN = (String) doc.getData().get("ISBN");
+                    String ISBN = (String) doc.getData().get("ISBN").toString();
                     String author = (String) doc.getData().get("Author");
                     String title = (String) doc.getData().get("Title");
                     bookDataList.add(new Book(ISBN, author, title)); // Adding the cities and provinces from FireStore
                 }
                 bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
             }
-        });*/
+        });
     }
 }
