@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="175dp"
+    android:background="#673AB7"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/userNameHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="125dp"
+        android:text="User Name"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+</LinearLayout>

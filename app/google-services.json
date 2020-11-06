@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "886747462675",
+    "firebase_url": "https://athenaeum-73bb6.firebaseio.com",
+    "project_id": "athenaeum-73bb6",
+    "storage_bucket": "athenaeum-73bb6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886747462675:android:18e0210a6499ae14a0d3e6",
+        "android_client_info": {
+          "package_name": "com.example.athenaeum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886747462675-uudh0s65b76ubdt3b6mv90ttf3s2uf5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu3fIUg6a2wD4pef9rHgCWKaG3RNSll4s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886747462675-uudh0s65b76ubdt3b6mv90ttf3s2uf5t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
