@@ -7,10 +7,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-<<<<<<< HEAD
 import com.google.android.gms.tasks.Task;
-=======
->>>>>>> 3bcbc0faf0cacf930768c2899d75af5e0df1f292
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,10 +26,7 @@ public class BookDB {
     private ArrayList<Book> books;
 
     public BookDB() {
-<<<<<<< HEAD
-=======
         booksDB = FirebaseFirestore.getInstance();
->>>>>>> 3bcbc0faf0cacf930768c2899d75af5e0df1f292
     }
 
     public CollectionReference getCollection() {

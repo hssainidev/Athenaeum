@@ -50,30 +50,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-<<<<<<< HEAD
         BookDB booksDB = new BookDB();
-=======
 
         // Initialize the list of books.
         bookList = findViewById(R.id.book_list);
         bookDataList = new ArrayList<>();
 
         bookAdapter = new CustomBookList(this, bookDataList);
-
-
-        // For testing only.
-        Book book1 = new Book("2472374", "Asdf Qwerty", "Lorem Ipsum");
-        Book book2 = new Book("34727348", "Asdf Qwerty", "Dolor Sit Amet");
-        Book book3 = new Book("34727347", "Asdf Qwerty", "Bees");
-        book1.setDescription("Desc1");
-        book2.setDescription("Desc2");
-        book3.setDescription("Desc3");
-        book1.setStatus("available");
-        book2.setStatus("requested");
-        book3.setStatus("borrowed");
-        bookDataList.add(book1);
-        bookDataList.add(book2);
-        bookDataList.add(book3);
 
         bookList.setAdapter(bookAdapter);
 
@@ -114,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         // Retrieve the information for the books and add it to the books list.
-        BookDB bookDB = new BookDB();
         final CollectionReference collectionReference = bookDB.getCollection();
 
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -136,6 +118,5 @@ public class MainActivity extends AppCompatActivity {
                 bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
             }
         });
->>>>>>> 3bcbc0faf0cacf930768c2899d75af5e0df1f292
     }
 }
