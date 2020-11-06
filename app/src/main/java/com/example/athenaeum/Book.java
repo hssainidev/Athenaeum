@@ -1,13 +1,14 @@
 package com.example.athenaeum;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * This is a class of book objects that have an ISBN, author, title, status, and owner,
  * and may also have a description and/or photo.
  */
 
-public class Book {
+public class Book implements Serializable {
     private String ISBN;
     private String author;
     private String description;
