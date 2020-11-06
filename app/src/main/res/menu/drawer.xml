@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/menu_profile"
+            android:title="Profile" />
+        <item
+            android:id="@+id/menu_notifications"
+            android:title="Notifications" />
+        <item
+            android:id="@+id/menu_owned"
+            android:title="Owned Books" />
+        <item
+            android:id="@+id/menu_requested"
+            android:title="Requested Books" />
+        <item
+            android:id="@+id/menu_borrowed"
+            android:title="Borrowed Books" />
+        <item
+            android:id="@+id/menu_logout"
+            android:title="Logout" />
+
+    </group>
+
+</menu>

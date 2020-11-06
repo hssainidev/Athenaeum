@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Athenaeum</string>
+    <string name="profile_title">%s\'s Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="scan">SCAN</string>
+    <string name="location">Location</string>
+    <string name="view_requests">View Requests</string>
 </resources>
