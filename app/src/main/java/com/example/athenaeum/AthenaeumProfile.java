@@ -10,6 +10,7 @@ public class AthenaeumProfile {
         this.password = password;
         this.email = email;
     }
+    public AthenaeumProfile() {}
 
     public String getUsername() {
         return username;

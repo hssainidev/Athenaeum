@@ -58,25 +58,20 @@ public class SignupActivity extends AppCompatActivity {
 
                     Task<AuthResult> authentication = auth.addUser(profile);
                     authentication
-                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
-                                public void onSuccess(AuthResult authResult) {
-                                    User user = new User(profile);
-                                    userDB.addUser(user, authResult.getUser().getUid());
-                                    Log.d("tag", "successfully added account");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d("Fail", e.toString());
-                                    verify = false;
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        User user = new User(profile);
+                                        userDB.addUser(user, task.getResult().getUser().getUid());
+                                        Log.d("tag", "successfully added account");
+                                        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                                        startActivity(intent);
+                                    } else {
+                                        Log.d("Fail", task.getException().toString());
+                                    }
                                 }
                             });
-                }
-                if (verify) {
-                    Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                    startActivity(intent);
                 }
             }
         });

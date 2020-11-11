@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     ListView bookList;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
+    UserDB users;
 
 
     final String TAG = "Sample";
@@ -43,18 +44,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        String uid=getIntent().getExtras().getString("UID");
+        Log.d("Pls", uid);
+        users=new UserDB();
+        User currentUser=users.getUser(uid);
 
         bookList = findViewById(R.id.book_list);
-        bookDataList = new ArrayList<>();
+        bookDataList = currentUser.getBooks();
 
         bookAdapter = new CustomBookList(this, bookDataList);
 
-        // For testing only.
-        Book book1 = new Book("2472374", "Asdf Qwerty", "Lorem Ipsum");
-        Book book2 = new Book("34727348", "Asdf Qwerty", "Dolor Sit Amet");
+//        // For testing only.
+//        Book book1 = new Book("2472374", "Asdf Qwerty", "Lorem Ipsum");
+//        Book book2 = new Book("34727348", "Asdf Qwerty", "Dolor Sit Amet");
 
-        bookDataList.add(book1);
-        bookDataList.add(book2);
+//        bookDataList.add(book1);
+//        bookDataList.add(book2);
 
         bookList.setAdapter(bookAdapter);
 

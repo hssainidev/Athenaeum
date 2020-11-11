@@ -21,6 +21,7 @@ public class User{
         this.profile = profile;
         books = new ArrayList<>();
     }
+    public User() {}
 
     /**
      * This returns the user's array of books.
