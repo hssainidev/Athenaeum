@@ -14,7 +14,7 @@ public class Book {
     private String title;
     private String status;
     private File photo;
-    private User owner;
+    private String ownerUID;
 
     /**
      * This constructs a Book object from a given ISBM, author, and title
@@ -29,7 +29,9 @@ public class Book {
         this.ISBN = ISBN;
         this.author = author;
         this.title = title;
+        this.status="Available";
     }
+    public Book(){}
 
     /**
      * This returns the book's ISBN
@@ -142,18 +144,18 @@ public class Book {
     /**
      * This returns the book's owner
      * @return
-     * Return the owner of the book.
+     * Return the ownerUID of the book.
      */
-    public User getOwner() {
-        return owner;
+    public String getOwnerUID() {
+        return ownerUID;
     }
 
     /**
      * This sets a book's owner
-     * @param owner
+     * @param ownerUID
      * This is the new owner.
      */
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setOwnerUID(String ownerUID) {
+        this.ownerUID = ownerUID;
     }
 }

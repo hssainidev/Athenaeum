@@ -44,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String uid=getIntent().getExtras().getString("UID");
-        Log.d("Pls", uid);
+        final String uid=getIntent().getExtras().getString("UID");
         users=new UserDB();
         User currentUser=users.getUser(uid);
 
@@ -84,6 +83,14 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+        final Button addBookButton = findViewById(R.id.addBook);
+        addBookButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddBookActivity.class);
+                intent.putExtra("UID", uid);
+                startActivity(intent);
+            }
+        });
 
         // Access a Cloud Firestore instance from your Activity
         /*FirebaseFirestore db = FirebaseFirestore.getInstance();

@@ -19,6 +19,7 @@
 
         <activity android:name=".SignupActivity"></activity>
         <activity android:name=".MainActivity"></activity>
+        <activity android:name=".AddBookActivity"></activity>
     </application>
 
 </manifest>
