@@ -20,6 +20,12 @@
             android:id="@+id/addBook"
             android:text="Add Book"
             android:textColor="#FFFFFF"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchButton"
+            android:text="Search by Keyword"
+            android:textColor="#FFFFFF"/>
 
         <ListView
             android:id="@+id/book_list"

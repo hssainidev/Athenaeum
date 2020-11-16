@@ -91,6 +91,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        final Button searchButton=findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this, SearchActivity.class);
+                intent.putExtra("UID", uid);
+                startActivity(intent);
+            }
+        });
 
         // Access a Cloud Firestore instance from your Activity
         /*FirebaseFirestore db = FirebaseFirestore.getInstance();

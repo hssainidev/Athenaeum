@@ -49,8 +49,13 @@ public class BookDB {
         while(!bookQuery.isComplete()){}
         for (QueryDocumentSnapshot document: bookQuery.getResult()) {
             Book book=document.toObject(Book.class);
-            if (book.getDescription().contains(keyword1)) {
-                bookSearch.add(document.toObject(Book.class));
+            try {
+                Log.d("book", book.getDescription());
+                if (book.getDescription().contains(keyword1)) {
+                    bookSearch.add(document.toObject(Book.class));
+                }
+            } catch (Exception e) {
+                Log.d("Error", "failed search");
             }
         }
         return bookSearch;
