@@ -49,6 +49,7 @@ public class AthenaeumProfile implements Serializable {
         this.password = password;
         this.email = email;
     }
+    public AthenaeumProfile() {}
 
     public String getUsername() {
         return username;

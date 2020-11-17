@@ -33,10 +33,8 @@ public class UserDB {
 
     public void addUser(User user, String uid) {
         final User user1=user;
-        HashMap<String, User> data=new HashMap<>();
-        data.put("UserObject", user);
         usersDB.collection("Users")
-                .document(uid).set(data)
+                .document(uid).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -50,9 +48,18 @@ public class UserDB {
                     }
                 });
     }
-    public Task<DocumentSnapshot> getUser(String uid) {
-        DocumentReference userRef = this.getCollection().document(uid);
-        return userRef.get();
+  
+    public User getUser(String uid) {
+
+        DocumentReference userRef=usersDB.collection("Users").document(uid);
+        Task<DocumentSnapshot> userFind=userRef.get();
+        try {
+            userFind.wait();
+        } catch (Exception e) {
+            Log.d("Error", e.toString());
+        }
+        while (!userFind.isComplete()) {}
+        return (User)userFind.getResult().toObject(User.class);
     }
 
 }

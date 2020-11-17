@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -36,11 +37,11 @@ public class BookDB {
     public void addBook(Book book) {
         final Book book1=book;
         booksDB.collection("Books")
-                .add(book)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .document(book.getISBN()).set(book)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, book1.getISBN()+" added");
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Book added successfully");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -50,34 +51,23 @@ public class BookDB {
                     }
                 });
     }
-
-    /**
-     * Search for a book based on a keyword in the description
-     * TODO: check w/ tests
-     * @param keyword search keyword provided
-     * @return ArrayList<Book>
-     */
-    public ArrayList<Book> keywordSearch(String keyword){
-        final ArrayList<Book> matchingBooks = new ArrayList<Book>();
-        booksRef.whereEqualTo("status","available")
-                .whereGreaterThanOrEqualTo("Description",keyword)
-                .whereLessThanOrEqualTo("Description",keyword + '\uf8ff')
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
-                            Book book = documentSnapshot.toObject(Book.class);
-                            matchingBooks.add(book);
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG,"No books found");
-                    }
-                });
-        return matchingBooks;
+  
+    public ArrayList<Book> searchBooks(String keyword) {
+        final ArrayList<Book> bookSearch=new ArrayList<>();
+        final String keyword1=keyword;
+        Task<QuerySnapshot> bookQuery=booksDB.collection("Books").get();
+        while(!bookQuery.isComplete()){}
+        for (QueryDocumentSnapshot document: bookQuery.getResult()) {
+            Book book=document.toObject(Book.class);
+            try {
+                Log.d("book", book.getDescription());
+                if (book.getDescription().contains(keyword1)) {
+                    bookSearch.add(document.toObject(Book.class));
+                }
+            } catch (Exception e) {
+                Log.d("Error", "failed search");
+            }
+        }
+        return bookSearch;
     }
 }
