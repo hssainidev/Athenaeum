@@ -99,9 +99,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         if (menuItem.getItemId() == R.id.menu_logout) {
-                            // If logout is clicked, sign the user out and end the activity.
+                            // If logout is clicked, sign the user out and return to the login screen.
                             userAuth.signOut();
-                            finish();
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
                         } else if (menuItem.getItemId() == R.id.menu_profile) {
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                             Bundle bundle = new Bundle();
