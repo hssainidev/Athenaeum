@@ -6,12 +6,20 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/userNameHeader"
+        android:id="@+id/nameHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="125dp"
-        android:text="User Name"
+        android:layout_marginTop="100dp"
+        android:text="Name"
         android:textColor="#FFFFFF"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
+    <TextView
+        android:id="@+id/usernameHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="Username"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp" />
 </LinearLayout>

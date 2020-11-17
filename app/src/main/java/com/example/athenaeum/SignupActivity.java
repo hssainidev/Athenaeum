@@ -62,7 +62,7 @@ public class SignupActivity extends AppCompatActivity {
                 String passwordText = pass.getText().toString();
                 String passwordConfirmText = passConfirm.getText().toString();
                 if (passwordText.length() == 0 || passwordConfirmText.length() == 0 || !passwordText.equals(passwordConfirmText)) {
-                    passwordConfirm.setError("Your passwords must match.");
+                    passConfirm.setError("Your passwords must match.");
                     return;
                 }
               

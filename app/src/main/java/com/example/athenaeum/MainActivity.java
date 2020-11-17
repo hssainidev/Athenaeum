@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final String uid = getIntent().getExtras().getString("UID");
         users = new UserDB();
-        User currentUser = users.getUser(uid);
+        final User currentUser = users.getUser(uid);
         BookDB booksDB = new BookDB();
 
         // Initialize the list of books.
@@ -84,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
+        // Add the current user's name and username to the header.
+        View header = navigationView.getHeaderView(0);
+        TextView nameHeader = header.findViewById(R.id.nameHeader);
+        nameHeader.setText(currentUser.getProfile().getName());
+        TextView usernameHeader = header.findViewById(R.id.usernameHeader);
+        usernameHeader.setText(currentUser.getProfile().getUsername());
+
         final UserAuth userAuth = new UserAuth();
 
         // Initialize the listener for clicking any item in the menu.
@@ -96,16 +103,16 @@ public class MainActivity extends AppCompatActivity {
                             userAuth.signOut();
                             finish();
                         } else if (menuItem.getItemId() == R.id.menu_profile) {
-                            AthenaeumProfile profile = new AthenaeumProfile("Test Username", "Test Name", "testtest", "1234567890", "test@test.com");
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                             Bundle bundle = new Bundle();
-                            bundle.putSerializable("profile", profile);
+                            bundle.putSerializable("profile", currentUser.getProfile());
                             intent.putExtras(bundle);
                             startActivity(intent);
                         }
                         return true;
                     }
                 });
+
         final Button addBookButton = findViewById(R.id.addBook);
         addBookButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -114,11 +121,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         final Button searchButton=findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this, SearchActivity.class);
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 intent.putExtra("UID", uid);
                 startActivity(intent);
             }
@@ -138,9 +146,9 @@ public class MainActivity extends AppCompatActivity {
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
                     Log.d(TAG, String.valueOf(doc.getData().get("ISBN")));
-                    String ISBN = (String) doc.getData().get("ISBN").toString();
-                    String author = (String) doc.getData().get("Author");
-                    String title = (String) doc.getData().get("Title");
+                    String ISBN = (String) doc.getData().get("isbn");
+                    String author = (String) doc.getData().get("author");
+                    String title = (String) doc.getData().get("title");
                     bookDataList.add(new Book(ISBN, author, title)); // Adding the cities and provinces from FireStore
                 }
                 bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud

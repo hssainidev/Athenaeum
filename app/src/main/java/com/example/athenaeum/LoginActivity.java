@@ -17,8 +17,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
 public class LoginActivity extends AppCompatActivity {
-    EditText pass;
-    EditText email;
     UserAuth auth;
     public Boolean verify;
     public String uid;
@@ -69,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Add checking for correct data in login/signup
 
                 if (verify) {
-                    Task<AuthResult> authentication = auth.signIn(emailText, passwordTexr);
+                    Task<AuthResult> authentication = auth.signIn(emailText, passwordText);
                     authentication
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
