@@ -13,6 +13,7 @@ public class AddBookActivity extends AppCompatActivity {
     EditText author;
     EditText ISBN;
     EditText title;
+    EditText description;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +21,7 @@ public class AddBookActivity extends AppCompatActivity {
         author=findViewById(R.id.author);
         ISBN=findViewById(R.id.ISBN);
         title=findViewById(R.id.title);
+        description=findViewById(R.id.description);
         final Button add_book=findViewById(R.id.buttonAddBook);
         final String uid=getIntent().getExtras().getString("UID");
 
@@ -30,7 +32,9 @@ public class AddBookActivity extends AppCompatActivity {
                 String authorString=author.getText().toString();
                 String ISBNString=ISBN.getText().toString();
                 String titleString=title.getText().toString();
+                String descriptionString=description.getText().toString();
                 Book newBook=new Book(ISBNString,authorString,titleString);
+                newBook.setDescription(descriptionString);
                 newBook.setOwnerUID(uid);
                 UserDB userDB=new UserDB();
                 User user=userDB.getUser(uid);

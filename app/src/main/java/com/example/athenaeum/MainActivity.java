@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         // Initialize the list of books.
         bookList = findViewById(R.id.book_list);
         bookDataList = currentUser.getBooks();
+        for (Book book: bookDataList) {
+            Log.d("book", book.getISBN());
+        }
 
         bookAdapter = new CustomBookList(this, bookDataList);
 
@@ -134,26 +137,26 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Retrieve the information for the books and add it to the books list.
-        final CollectionReference collectionReference = booksDB.getCollection();
-
-        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-                    FirebaseFirestoreException error) {
-                if (error != null) {
-                    return;
-                }
-                bookDataList.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
-                    Log.d(TAG, String.valueOf(doc.getData().get("ISBN")));
-                    String ISBN = (String) doc.getData().get("isbn");
-                    String author = (String) doc.getData().get("author");
-                    String title = (String) doc.getData().get("title");
-                    bookDataList.add(new Book(ISBN, author, title)); // Adding the cities and provinces from FireStore
-                }
-                bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
-            }
-        });
+//        final CollectionReference collectionReference = booksDB.getCollection();
+//
+//        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+//                    FirebaseFirestoreException error) {
+//                if (error != null) {
+//                    return;
+//                }
+//                bookDataList.clear();
+//                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+//                {
+//                    Log.d(TAG, String.valueOf(doc.getData().get("ISBN")));
+//                    String ISBN = (String) doc.getData().get("isbn");
+//                    String author = (String) doc.getData().get("author");
+//                    String title = (String) doc.getData().get("title");
+//                    bookDataList.add(new Book(ISBN, author, title)); // Adding the cities and provinces from FireStore
+//                }
+//                bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
+//            }
+//        });
     }
 }
