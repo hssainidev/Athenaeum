@@ -22,8 +22,7 @@ import java.util.ArrayList;
 import static android.content.ContentValues.TAG;
 
 public class BookDB {
-    private FirebaseFirestore booksDB = FirebaseFirestore.getInstance();;
-    private CollectionReference booksRef = booksDB.collection("Books");
+    private FirebaseFirestore booksDB = FirebaseFirestore.getInstance();
     private ArrayList<Book> books;
 
     public BookDB() {
