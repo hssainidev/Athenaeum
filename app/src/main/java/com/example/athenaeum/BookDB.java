@@ -8,23 +8,32 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
 public class BookDB {
-    private FirebaseFirestore booksDB;
+    private FirebaseFirestore booksDB = FirebaseFirestore.getInstance();;
+    private CollectionReference booksRef = booksDB.collection("Books");
     private ArrayList<Book> books;
 
     public BookDB() {
-        booksDB=FirebaseFirestore.getInstance();
+        booksDB = FirebaseFirestore.getInstance();
     }
+
+    public CollectionReference getCollection() {
+        return booksDB.collection("Books");
+    }
+
     public void addBook(Book book) {
         final Book book1=book;
         booksDB.collection("Books")
@@ -42,6 +51,7 @@ public class BookDB {
                     }
                 });
     }
+  
     public ArrayList<Book> searchBooks(String keyword) {
         final ArrayList<Book> bookSearch=new ArrayList<>();
         final String keyword1=keyword;
@@ -60,6 +70,4 @@ public class BookDB {
         }
         return bookSearch;
     }
-
-
 }
