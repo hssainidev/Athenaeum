@@ -35,7 +35,7 @@ public class BookInfo extends AppCompatActivity implements Serializable {
         request_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BookInfo.this, Request.class));
+                startActivity(new Intent(BookInfo.this, View_Request.class));
             }
         });
 //        final Button scan_button = (Button) findViewById(R.id.scan);
