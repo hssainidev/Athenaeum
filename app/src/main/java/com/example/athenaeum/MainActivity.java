@@ -84,7 +84,9 @@ public class MainActivity extends AppCompatActivity {
                 new AppBarConfiguration.Builder(navController.getGraph())
                         .setOpenableLayout(drawerLayout)
                         .build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        NavigationUI.setupWithNavController(
+                toolbar, navController, appBarConfiguration);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         // Add the current user's name and username to the header.
