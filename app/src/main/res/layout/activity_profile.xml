@@ -10,9 +10,10 @@
         android:id="@+id/profile_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="?attr/homeAsUpIndicator">
 
@@ -20,10 +21,9 @@
             android:id="@+id/profile_toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Toolbar Title"
-            android:textSize="24sp"
             android:layout_gravity="center"
-             />
+            android:text="Toolbar Title"
+            android:textSize="24sp" />
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
