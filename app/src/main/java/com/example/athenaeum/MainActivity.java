@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                             // If logout is clicked, sign the user out and return to the login screen.
                             userAuth.signOut();
                             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                         } else if (menuItem.getItemId() == R.id.menu_profile) {
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);

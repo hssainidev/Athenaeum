@@ -23,7 +23,8 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <activity android:name=".AddBookActivity"></activity>
         <activity android:name=".SearchActivity"></activity>
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ProfileActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>
