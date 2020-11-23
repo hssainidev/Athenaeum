@@ -9,7 +9,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -25,8 +24,6 @@ public class OwnedBookActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_ownedbooklist);
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
 
 
         AthenaeumProfile profile = (AthenaeumProfile) getIntent().getExtras().getSerializable("profile");
