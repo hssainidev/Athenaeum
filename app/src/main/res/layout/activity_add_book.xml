@@ -82,4 +82,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/scan_button"
+        android:layout_width="30dp"
+        android:layout_height="29dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="204dp"
+        android:background="@android:drawable/ic_menu_camera"
+        app:layout_constraintStart_toEndOf="@+id/ISBN"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
