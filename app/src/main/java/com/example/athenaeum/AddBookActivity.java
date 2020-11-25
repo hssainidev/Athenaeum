@@ -2,8 +2,7 @@ package com.example.athenaeum;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -14,13 +13,21 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.mlkit.vision.barcode.Barcode;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.common.InputImage;
-import com.google.mlkit.vision.text.Text;
-import com.google.mlkit.vision.text.TextRecognition;
-import com.google.mlkit.vision.text.TextRecognizer;
+
+import java.util.List;
 
 public class AddBookActivity extends AppCompatActivity {
 
@@ -75,6 +82,15 @@ public class AddBookActivity extends AppCompatActivity {
         });
     }
 
+    private String parseString(String givenString, String searchTerm) {
+        if (givenString.indexOf(searchTerm) == -1) {
+            return null;
+        }
+        int startIndex = givenString.indexOf("\"", (givenString.indexOf(searchTerm) + searchTerm.length() + 1)) + 1;
+        int endIndex = givenString.indexOf("\"", startIndex);
+        return givenString.substring(startIndex, endIndex);
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == pic_id) {
@@ -83,7 +99,36 @@ public class AddBookActivity extends AppCompatActivity {
             Log.d("SCAN", "Image scanned");
 
             InputImage image = InputImage.fromBitmap(bitmap, 0);
-            TextRecognizer recognizer = TextRecognition.getClient();
+
+            BarcodeScanner scanner = BarcodeScanning.getClient();
+            Task<List<Barcode>> result = scanner.process(image)
+                    .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+                        @Override
+                        public void onSuccess(List<Barcode> barcodes) {
+                            // Task completed successfully
+                            // ...
+                            Log.d("SUCCESS", "Text retrieved");
+                            for (Barcode barcode: barcodes) {
+
+                                String rawValue = barcode.getRawValue();
+
+                                int valueType = barcode.getValueType();
+                                Log.d("BARCODE", rawValue);
+                                Log.d("TYPE", String.valueOf(valueType));
+                            }
+                            // Hardcoded for testing
+                            retrieveBookInfo("0439554004");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Task failed with an exception
+                            // ...
+                        }
+                    });
+
+            /*TextRecognizer recognizer = TextRecognition.getClient();
 
             Task<Text> result =
                     recognizer.process(image)
@@ -111,7 +156,49 @@ public class AddBookActivity extends AppCompatActivity {
                                             // ...
                                             Log.d("Failure", "Text could not be retrieved");
                                         }
-                                    });
+                                    });*/
         }
+    }
+
+    private void retrieveBookInfo(final String isbnString) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbnString;
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        System.out.println(response);
+                        String titleString = parseString(response, "title");
+                        if (titleString == null) {
+                            // Error
+                        } else {
+                            title.setText(titleString);
+                        }
+                        String authorString = parseString(response, "authors");
+                        if (authorString == null) {
+                            // Error
+                        } else {
+                            author.setText(authorString);
+                        }
+                        String descriptionString = parseString(response, "description");
+                        if (descriptionString == null) {
+                            // Error
+                        } else {
+                            description.setText(descriptionString);
+                        }
+                        ISBN.setText(isbnString);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("RESPONSE", "Failed to get book info.");
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 }
