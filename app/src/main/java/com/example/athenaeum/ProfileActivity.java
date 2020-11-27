@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ProfileActivity extends AppCompatActivity{
+public class ProfileActivity extends AppCompatActivity {
 
     TextView title;
     TextView username;
@@ -21,7 +21,7 @@ public class ProfileActivity extends AppCompatActivity{
 
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.profile_toolbar);
 
-        toolbar.setNavigationOnClickListener (new View.OnClickListener() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

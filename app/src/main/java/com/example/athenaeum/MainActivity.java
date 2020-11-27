@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize the list of books.
         bookList = findViewById(R.id.book_list);
-        bookDataList=new ArrayList<>();
-        ArrayList<String> user_ISBNs=currentUser.getBooks();
-        for (String isbn:user_ISBNs) {
+        bookDataList = new ArrayList<>();
+        ArrayList<String> user_ISBNs = currentUser.getBooks();
+        for (String isbn : user_ISBNs) {
             bookDataList.add(booksDB.getBook(isbn));
         }
 
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final Button searchButton=findViewById(R.id.searchButton);
+        final Button searchButton = findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

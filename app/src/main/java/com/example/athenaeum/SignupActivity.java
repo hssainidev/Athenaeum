@@ -9,10 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
 import android.widget.Toast;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
@@ -65,9 +68,9 @@ public class SignupActivity extends AppCompatActivity {
                     passConfirm.setError("Your passwords must match.");
                     return;
                 }
-              
+
                 verify = true;
-                
+
                 // Initialize the authorization of a new user.
                 if (verify) {
                     final AthenaeumProfile profile = new AthenaeumProfile(usernameText, passwordText, emailText);
@@ -88,7 +91,7 @@ public class SignupActivity extends AppCompatActivity {
                                         email.setText("");
                                         pass.setText("");
                                         passConfirm.setText("");
-                                      
+
                                         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                                         startActivity(intent);
                                     } else {
