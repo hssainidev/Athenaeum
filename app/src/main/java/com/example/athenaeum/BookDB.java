@@ -69,4 +69,16 @@ public class BookDB {
         }
         return bookSearch;
     }
+
+    public Book getBook(String ISBN) {
+        DocumentReference bookRef=booksDB.collection("Books").document(ISBN);
+        Task<DocumentSnapshot> bookFind=bookRef.get();
+        try {
+            bookFind.wait();
+        } catch (Exception e) {
+            Log.d("Error", e.toString());
+        }
+        while (!bookFind.isComplete()) {}
+        return (Book)bookFind.getResult().toObject(Book.class);
+    }
 }

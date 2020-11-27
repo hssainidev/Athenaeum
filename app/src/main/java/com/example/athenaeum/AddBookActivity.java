@@ -39,7 +39,7 @@ public class AddBookActivity extends AppCompatActivity {
                 UserDB userDB=new UserDB();
                 User user=userDB.getUser(uid);
                 BookDB bookDB=new BookDB();
-                user.addBook(newBook);
+                user.addBook(ISBNString);
                 userDB.addUser(user, uid);
                 bookDB.addBook(newBook);
                 Intent intent=new Intent(AddBookActivity.this, MainActivity.class);
