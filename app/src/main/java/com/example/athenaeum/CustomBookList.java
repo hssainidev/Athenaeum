@@ -16,8 +16,8 @@ public class CustomBookList extends ArrayAdapter<Book> {
     private ArrayList<Book> books;
     private Context context;
 
-    public CustomBookList(Context context, ArrayList<Book> books){
-        super(context,0, books);
+    public CustomBookList(Context context, ArrayList<Book> books) {
+        super(context, 0, books);
         this.books = books;
         this.context = context;
     }
@@ -29,8 +29,8 @@ public class CustomBookList extends ArrayAdapter<Book> {
 //        return super.getView(position, convertView, parent);
         View view = convertView;
 
-        if(view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.book_list_content, parent,false);
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.book_list_content, parent, false);
         }
 
         Book book = books.get(position);

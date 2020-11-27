@@ -9,10 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
 import android.widget.Toast;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
@@ -43,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize listener for login button.
         final Button loginButton = findViewById(R.id.buttonLogin);
         loginButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {  
+            public void onClick(View v) {
                 // Check that all the data is valid on the client side.
 
                 // Retrieve the email text and make sure that something was entered
@@ -62,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                     password.setError("You must enter a password.");
                     return;
                 }
-              
+
                 verify = true;
                 // Add checking for correct data in login/signup
 

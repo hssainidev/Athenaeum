@@ -47,6 +47,7 @@ public class AddBookActivity extends AppCompatActivity {
         description = findViewById(R.id.description);
         final Button add_book = findViewById(R.id.buttonAddBook);
         final String uid = getIntent().getExtras().getString("UID");
+
         pic_id = 1;
 
         Button scan_button = findViewById(R.id.scan_button);
@@ -66,13 +67,16 @@ public class AddBookActivity extends AppCompatActivity {
                 String ISBNString = ISBN.getText().toString();
                 String titleString = title.getText().toString();
                 String descriptionString = description.getText().toString();
-                Book newBook = new Book(ISBNString,authorString,titleString);
+
+                Book newBook = new Book(ISBNString, authorString, titleString);
                 newBook.setDescription(descriptionString);
                 newBook.setOwnerUID(uid);
+                newBook.setBorrowerUID(uid);
                 UserDB userDB = new UserDB();
                 User user = userDB.getUser(uid);
                 BookDB bookDB = new BookDB();
-                user.addBook(newBook);
+                user.addBook(ISBNString);
+
                 userDB.addUser(user, uid);
                 bookDB.addBook(newBook);
                 Intent intent = new Intent(AddBookActivity.this, MainActivity.class);
