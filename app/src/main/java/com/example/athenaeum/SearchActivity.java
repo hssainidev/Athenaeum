@@ -19,20 +19,20 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        keyword=findViewById(R.id.keyword);
-        final Button search=findViewById(R.id.search);
-        final String uid=getIntent().getExtras().getString("UID");
-        final BookDB db=new BookDB();
-        final Button back=findViewById(R.id.returnFromSearch);
+        keyword = findViewById(R.id.keyword);
+        final Button search = findViewById(R.id.search);
+        final String uid = getIntent().getExtras().getString("UID");
+        final BookDB db = new BookDB();
+        final Button back = findViewById(R.id.returnFromSearch);
 
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String keyword_string=keyword.getText().toString();
-                ArrayList<Book> list=db.searchBooks(keyword_string);
-                ListView listView=findViewById(R.id.result_list);
-                ArrayAdapter<Book> adapter=new CustomBookList(SearchActivity.this, list);
+                String keyword_string = keyword.getText().toString();
+                ArrayList<Book> list = db.searchBooks(keyword_string);
+                ListView listView = findViewById(R.id.result_list);
+                ArrayAdapter<Book> adapter = new CustomBookList(SearchActivity.this, list);
                 listView.setAdapter(adapter);
 
             }
@@ -40,12 +40,11 @@ public class SearchActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(SearchActivity.this, MainActivity.class);
+                Intent intent = new Intent(SearchActivity.this, MainActivity.class);
                 intent.putExtra("UID", uid);
                 startActivity(intent);
             }
         });
-
 
 
     }

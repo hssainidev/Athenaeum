@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.Serializable;
@@ -16,12 +17,12 @@ public class BookInfo extends AppCompatActivity implements Serializable {
     private BookDB bookDB;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.book);
         this.book = (Book) getIntent().getSerializableExtra("BOOK");
 
-        bookDB=new BookDB();
+        bookDB = new BookDB();
 
         // connecting the variables to the TextView components of the layout
         TextView title = (TextView) findViewById(R.id.book_title);
@@ -34,14 +35,13 @@ public class BookInfo extends AppCompatActivity implements Serializable {
         status.setText(book.getStatus());
 
         // Update the book description if it has changed
-        final Button update_description_button=(Button) findViewById(R.id.update_description);
+        final Button update_description_button = (Button) findViewById(R.id.update_description);
         update_description_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bookDesc.getText().toString().length()==0) {
+                if (bookDesc.getText().toString().length() == 0) {
                     bookDesc.setError("Must have a description");
-                }
-                else {
+                } else {
                     book.setDescription(bookDesc.getText().toString());
                     bookDB.addBook(book);
                 }

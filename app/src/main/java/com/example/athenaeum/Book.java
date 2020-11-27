@@ -16,28 +16,29 @@ public class Book implements Serializable {
     private String status;
     private File photo;
     private String ownerUID;
+    private String borrowerUID;
 
     /**
      * This constructs a Book object from a given ISBM, author, and title
-     * @param ISBN
-     * This is the ISBN of the book.
-     * @param author
-     * This is the author of the book.
-     * @param title
-     * This is the title of the book.
+     *
+     * @param ISBN   This is the ISBN of the book.
+     * @param author This is the author of the book.
+     * @param title  This is the title of the book.
      */
     public Book(String ISBN, String author, String title) {
         this.ISBN = ISBN;
         this.author = author;
         this.title = title;
-        this.status="Available";
+        this.status = "Available";
     }
-    public Book(){}
+
+    public Book() {
+    }
 
     /**
      * This returns the book's ISBN
-     * @return
-     * Return the ISBN of the book.
+     *
+     * @return Return the ISBN of the book.
      */
     public String getISBN() {
         return ISBN;
@@ -45,8 +46,8 @@ public class Book implements Serializable {
 
     /**
      * This sets a book's ISBN
-     * @param ISBN
-     * This is the new ISBN.
+     *
+     * @param ISBN This is the new ISBN.
      */
     public void setISBN(String ISBN) {
         this.ISBN = ISBN;
@@ -54,8 +55,8 @@ public class Book implements Serializable {
 
     /**
      * This returns the book's author
-     * @return
-     * Return the author of the book.
+     *
+     * @return Return the author of the book.
      */
     public String getAuthor() {
         return author;
@@ -63,8 +64,8 @@ public class Book implements Serializable {
 
     /**
      * This sets a book's author
-     * @param author
-     * This is the new author.
+     *
+     * @param author This is the new author.
      */
     public void setAuthor(String author) {
         this.author = author;
@@ -72,8 +73,8 @@ public class Book implements Serializable {
 
     /**
      * This returns the book's description
-     * @return
-     * Return the description of the book.
+     *
+     * @return Return the description of the book.
      */
     public String getDescription() {
         return description;
@@ -81,8 +82,8 @@ public class Book implements Serializable {
 
     /**
      * This sets a book's description
-     * @param description
-     * This is the new description.
+     *
+     * @param description This is the new description.
      */
     public void setDescription(String description) {
         this.description = description;
@@ -90,8 +91,8 @@ public class Book implements Serializable {
 
     /**
      * This returns the book's title
-     * @return
-     * Return the title of the book.
+     *
+     * @return Return the title of the book.
      */
     public String getTitle() {
         return title;
@@ -99,8 +100,8 @@ public class Book implements Serializable {
 
     /**
      * This sets a book's title
-     * @param title
-     * This is the new title.
+     *
+     * @param title This is the new title.
      */
     public void setTitle(String title) {
         this.title = title;
@@ -108,8 +109,8 @@ public class Book implements Serializable {
 
     /**
      * This returns the book's status
-     * @return
-     * Return the status of the book.
+     *
+     * @return Return the status of the book.
      */
     public String getStatus() {
         return status;
@@ -117,8 +118,8 @@ public class Book implements Serializable {
 
     /**
      * This sets a book's status
-     * @param status
-     * This is the new status.
+     *
+     * @param status This is the new status.
      */
     public void setStatus(String status) {
         this.status = status;
@@ -126,8 +127,8 @@ public class Book implements Serializable {
 
     /**
      * This returns the book's photo
-     * @return
-     * Return the photo of the book.
+     *
+     * @return Return the photo of the book.
      */
     public File getPhoto() {
         return photo;
@@ -135,8 +136,8 @@ public class Book implements Serializable {
 
     /**
      * This sets a book's photo
-     * @param photo
-     * This is the new photo.
+     *
+     * @param photo This is the new photo.
      */
     public void setPhoto(File photo) {
         this.photo = photo;
@@ -144,8 +145,8 @@ public class Book implements Serializable {
 
     /**
      * This returns the book's owner
-     * @return
-     * Return the ownerUID of the book.
+     *
+     * @return Return the ownerUID of the book.
      */
     public String getOwnerUID() {
         return ownerUID;
@@ -153,10 +154,24 @@ public class Book implements Serializable {
 
     /**
      * This sets a book's owner
-     * @param ownerUID
-     * This is the new owner.
+     *
+     * @param ownerUID This is the new owner.
      */
     public void setOwnerUID(String ownerUID) {
         this.ownerUID = ownerUID;
+    }
+
+    public String getBorrowerUID() {
+        return borrowerUID;
+    }
+
+    public void setBorrowerUID(String borrowerUID) {
+        this.borrowerUID = borrowerUID;
+    }
+
+
+    public void request(String uid) {
+        this.setStatus("Requested");
+        this.borrowerUID = uid;
     }
 }

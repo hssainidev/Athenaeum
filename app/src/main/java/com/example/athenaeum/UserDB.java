@@ -32,7 +32,7 @@ public class UserDB {
     }
 
     public void addUser(User user, String uid) {
-        final User user1=user;
+        final User user1 = user;
         usersDB.collection("Users")
                 .document(uid).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -48,18 +48,19 @@ public class UserDB {
                     }
                 });
     }
-  
+
     public User getUser(String uid) {
 
-        DocumentReference userRef=usersDB.collection("Users").document(uid);
-        Task<DocumentSnapshot> userFind=userRef.get();
+        DocumentReference userRef = usersDB.collection("Users").document(uid);
+        Task<DocumentSnapshot> userFind = userRef.get();
         try {
             userFind.wait();
         } catch (Exception e) {
             Log.d("Error", e.toString());
         }
-        while (!userFind.isComplete()) {}
-        return (User)userFind.getResult().toObject(User.class);
+        while (!userFind.isComplete()) {
+        }
+        return (User) userFind.getResult().toObject(User.class);
     }
 
 }
