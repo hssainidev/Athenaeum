@@ -83,4 +83,11 @@ public class BookDB {
         }
         return (Book) bookFind.getResult().toObject(Book.class);
     }
+
+    public void deleteBook(String ISBN) {
+        DocumentReference bookRef = booksDB.collection("Books").document(ISBN);
+        Task<Void> bookDelete = bookRef.delete();
+        while (!bookDelete.isComplete()) {
+        }
+    }
 }
