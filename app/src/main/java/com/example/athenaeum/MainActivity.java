@@ -45,10 +45,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize the list of books.
         bookList = findViewById(R.id.book_list);
-        bookDataList = currentUser.getBooks();
-        for (Book book: bookDataList) {
-            Log.d("book", book.getISBN());
+        bookDataList=new ArrayList<>();
+        ArrayList<String> user_ISBNs=currentUser.getBooks();
+        for (String isbn:user_ISBNs) {
+            bookDataList.add(booksDB.getBook(isbn));
         }
+
+//        for (Book book: bookDataList) {
+//            Log.d("book", book.getISBN());
+//        }
 
         bookAdapter = new CustomBookList(this, bookDataList);
 

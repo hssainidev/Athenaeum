@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 
 public class User{
-    private ArrayList<Book> books;
+    private ArrayList<String> books;
     private AthenaeumProfile profile;
 
     /**
@@ -28,7 +28,7 @@ public class User{
      * @return
      * Return the array of books owned by the user.
      */
-    public ArrayList<Book> getBooks() {
+    public ArrayList<String> getBooks() {
         return books;
     }
 
@@ -37,7 +37,7 @@ public class User{
      * @param books
      * This is the new array of books.
      */
-    public void setBooks(ArrayList<Book> books) {
+    public void setBooks(ArrayList<String> books) {
         this.books = books;
     }
 
@@ -46,7 +46,7 @@ public class User{
      * @param book
      * This is the new book.
      */
-    public void addBook(Book book) {
+    public void addBook(String book) {
         books.add(book);
     }
 
