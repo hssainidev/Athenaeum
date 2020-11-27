@@ -19,6 +19,8 @@ public class OwnedBookActivity extends AppCompatActivity {
     Spinner mySpinner;
     ArrayAdapter<Book> bookAdapter;
     String[] status = {"All", "Available", "Requested", "Borrowed"};
+    final BookDB booksDB = new BookDB();
+    ArrayList<Book> bookDataList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -27,13 +29,18 @@ public class OwnedBookActivity extends AppCompatActivity {
 
 
         AthenaeumProfile profile = (AthenaeumProfile) getIntent().getExtras().getSerializable("profile");
-        final ArrayList<Book> books = (ArrayList<Book>) getIntent().getExtras().getSerializable("ownedBooks");
+        //noinspection unchecked
+        final ArrayList<String> books = (ArrayList<String>) getIntent().getExtras().getSerializable("ownedBooks");
 
+        for (String isbn : books) {
+            Book myBook = booksDB.getBook(isbn);
+            bookDataList.add(myBook);
+        }
         name = findViewById(R.id.headerLabel);
         name.setText(String.format("%s's Books", profile.getUsername()));
 
         bookList = findViewById(R.id.myBookList);
-        bookAdapter = new CustomBookList(this, books);
+        bookAdapter = new CustomBookList(this, bookDataList);
         bookList.setAdapter(bookAdapter);
 
         mySpinner = findViewById(R.id.mySpinner);
@@ -43,7 +50,7 @@ public class OwnedBookActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position >= 0 && position < status.length) {
-                    getSelectedStatusData(position, books);
+                    getSelectedStatusData(position, bookDataList);
                 } else {
                     Toast.makeText(OwnedBookActivity.this, "Selected category does not exist!", Toast.LENGTH_SHORT).show();
                 }
@@ -70,12 +77,4 @@ public class OwnedBookActivity extends AppCompatActivity {
             }
         });
     }
-
-//
-
-
-//    private void initializeViews() {
-//        mySpinner = findViewById(R.id.mySpinner);
-//        mySpinner.setAdapter(new );
-//    }
 }

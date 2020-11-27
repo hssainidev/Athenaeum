@@ -2,7 +2,6 @@ package com.example.athenaeum;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         final String uid = getIntent().getExtras().getString("UID");
         users = new UserDB();
         final User currentUser = users.getUser(uid);
-        BookDB booksDB = new BookDB();
+        final BookDB booksDB = new BookDB();
 
         // Initialize the list of books.
         bookList = findViewById(R.id.book_list);
@@ -111,6 +110,14 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent = new Intent(MainActivity.this, OwnedBookActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("ownedBooks", currentUser.getBooks());
+                            bundle.putSerializable("profile", currentUser.getProfile());
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        } else if (menuItem.getItemId() == R.id.menu_notifications) {
+                            Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("ownedBooks", currentUser.getBooks());
+                            bundle.putSerializable("UID", uid);
                             bundle.putSerializable("profile", currentUser.getProfile());
                             intent.putExtras(bundle);
                             startActivity(intent);
