@@ -6,4 +6,5 @@
     <string name="scan">SCAN</string>
     <string name="location">Location</string>
     <string name="view_requests">View Requests</string>
+    <string name="msg_token_fmt" formatted="true">Use for String.format method. Parameter one: %s1</string>
 </resources>
