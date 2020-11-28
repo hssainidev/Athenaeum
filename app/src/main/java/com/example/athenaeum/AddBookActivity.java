@@ -1,5 +1,6 @@
 package com.example.athenaeum;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ExifInterface;
@@ -9,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
@@ -26,6 +29,9 @@ import com.google.mlkit.vision.barcode.Barcode;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.common.InputImage;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import com.journeyapps.barcodescanner.CaptureActivity;
 
 import java.util.List;
 
@@ -54,8 +60,9 @@ public class AddBookActivity extends AppCompatActivity {
         scan_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, pic_id);
+                scanCode();
+                /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, pic_id);*/
             }
         });
 
@@ -86,6 +93,16 @@ public class AddBookActivity extends AppCompatActivity {
         });
     }
 
+    private void scanCode() {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setCaptureActivity(CaptureActivity.class);
+        integrator.setOrientationLocked(false);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setPrompt("Scanning Code...");
+        integrator.initiateScan();
+
+    }
+
     private String parseString(String givenString, String searchTerm) {
         if (givenString.indexOf(searchTerm) == -1) {
             return null;
@@ -96,109 +113,72 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == pic_id) {
-            Bitmap bitmap = (Bitmap) data.getExtras()
-                    .get("data");
-            Log.d("SCAN", "Image scanned");
-
-            InputImage image = InputImage.fromBitmap(bitmap, 0);
-
-            BarcodeScanner scanner = BarcodeScanning.getClient();
-            Task<List<Barcode>> result = scanner.process(image)
-                    .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
-                        @Override
-                        public void onSuccess(List<Barcode> barcodes) {
-                            // Task completed successfully
-                            // ...
-                            Log.d("SUCCESS", "Text retrieved");
-                            for (Barcode barcode: barcodes) {
-
-                                String rawValue = barcode.getRawValue();
-
-                                int valueType = barcode.getValueType();
-                                Log.d("BARCODE", rawValue);
-                                Log.d("TYPE", String.valueOf(valueType));
-                            }
-                            // Hardcoded for testing
-                            retrieveBookInfo("0439554004");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Task failed with an exception
-                            // ...
-                        }
-                    });
-
-            /*TextRecognizer recognizer = TextRecognition.getClient();
-
-            Task<Text> result =
-                    recognizer.process(image)
-                            .addOnSuccessListener(new OnSuccessListener<Text>() {
-                                @Override
-                                public void onSuccess(Text visionText) {
-                                    // Task completed successfully
-                                    // ...
-                                    Log.d("SUCCESS", "Text retrieved");
-                                    Log.d("TEXT FOUND", visionText.getText());
-                                    for (Text.TextBlock block : visionText.getTextBlocks()) {
-                                        for (Text.Line line : block.getLines()) {
-                                            for (Text.Element element : line.getElements()) {
-                                                Log.d("TEXT FOUND", element.getText());
-                                            }
-                                        }
-                                    }
-                                }
-                            })
-                            .addOnFailureListener(
-                                    new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            // Task failed with an exception
-                                            // ...
-                                            Log.d("Failure", "Text could not be retrieved");
-                                        }
-                                    });*/
+        final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(result.getContents());
+                builder.setTitle("Scanning Result");
+                builder.setPositiveButton("Scan Again", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        scanCode();
+                    }
+                }).setNegativeButton("Choose This ISBN", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        retrieveBookInfo(result.getContents());
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                Toast.makeText(this, "No Results", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    private void retrieveBookInfo(final String isbnString) {
+    private void retrieveBookInfo(String isbnString) {
         RequestQueue queue = Volley.newRequestQueue(this);
         String url ="https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbnString;
+        ISBN.setText(isbnString);
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        System.out.println(response);
-                        String titleString = parseString(response, "title");
-                        if (titleString == null) {
-                            // Error
-                        } else {
-                            title.setText(titleString);
-                        }
+                        title.setText("");
+                        author.setText("");
+                        description.setText("");
                         String authorString = parseString(response, "authors");
                         if (authorString == null) {
-                            // Error
+                            Toast.makeText(AddBookActivity.this, "Book info could not be found.", Toast.LENGTH_LONG).show();
+                            return;
                         } else {
                             author.setText(authorString);
                         }
+                        String titleString = parseString(response, "title");
+                        if (titleString == null) {
+                            Toast.makeText(AddBookActivity.this, "Book info could not be found.", Toast.LENGTH_LONG).show();
+                            return;
+                        } else {
+                            title.setText(titleString);
+                        }
                         String descriptionString = parseString(response, "description");
                         if (descriptionString == null) {
-                            // Error
+                            Toast.makeText(AddBookActivity.this, "Book info could not be found.", Toast.LENGTH_LONG).show();
+                            return;
                         } else {
                             description.setText(descriptionString);
                         }
-                        ISBN.setText(isbnString);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("RESPONSE", "Failed to get book info.");
+                Log.d("RESPONSE", "Could not reach Google Books.");
             }
         });
 
