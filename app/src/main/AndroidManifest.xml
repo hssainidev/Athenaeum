@@ -17,12 +17,22 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".BookInfo"></activity>
-        <activity android:name=".SignupActivity"></activity>
-        <activity android:name=".MainActivity"></activity>
-
-        <activity android:name=".ProfileActivity" />
-
+        <activity android:name=".BookInfo" />
+        <activity
+            android:name=".SignupActivity"
+            android:parentActivityName=".LoginActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".AddBookActivity" />
+        <activity android:name=".SearchActivity" />
+        <activity
+            android:name=".ProfileActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".OwnedBookActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

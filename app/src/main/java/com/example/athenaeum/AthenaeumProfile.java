@@ -16,24 +16,35 @@ public class AthenaeumProfile implements Serializable {
 
     /**
      * This constructs a new profile with the given parameters
-     * @param username
-     * This is the unique username of the profile
-     * @param name
-     * This is the name of the user who owns the profile
-     * @param password
-     * This is the user's password
-     * @param phoneNum
-     * This is the user's phone number
-     * @param email
-     * This is the user's email address
+     *
+     * @param username This is the unique username of the profile
+     * @param name     This is the name of the user who owns the profile
+     * @param password This is the user's password
+     * @param phoneNum This is the user's phone number
+     * @param email    This is the user's email address
      */
-
     public AthenaeumProfile(String username, String name, String password, String phoneNum, String email) {
         this.username = username;
         this.name = name;
         this.password = password;
         this.phoneNum = phoneNum;
         this.email = email;
+    }
+
+    /**
+     * This constructs a new profile with the given parameters
+     *
+     * @param username This is the unique username of the profile
+     * @param password This is the user's password
+     * @param email    This is the user's email address
+     */
+    public AthenaeumProfile(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
+    public AthenaeumProfile() {
     }
 
     public String getUsername() {

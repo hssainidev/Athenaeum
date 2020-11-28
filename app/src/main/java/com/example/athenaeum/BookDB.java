@@ -4,18 +4,25 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
 public class BookDB {
-    private FirebaseFirestore booksDB;
+    private FirebaseFirestore booksDB = FirebaseFirestore.getInstance();
     private ArrayList<Book> books;
 
     public BookDB() {
@@ -27,20 +34,60 @@ public class BookDB {
     }
 
     public void addBook(Book book) {
-        final Book book1=book;
+        final Book book1 = book;
         booksDB.collection("Books")
-                .add(book)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .document(book.getISBN()).set(book)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, book1.getISBN()+" added");
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Book added successfully");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Couldn't add "+book1.getISBN());
+                        Log.w(TAG, "Couldn't add " + book1.getISBN());
                     }
                 });
+    }
+
+    public ArrayList<Book> searchBooks(String keyword) {
+        final ArrayList<Book> bookSearch = new ArrayList<>();
+        final String keyword1 = keyword;
+        Task<QuerySnapshot> bookQuery = booksDB.collection("Books").get();
+        while (!bookQuery.isComplete()) {
+        }
+        for (QueryDocumentSnapshot document : bookQuery.getResult()) {
+            Book book = document.toObject(Book.class);
+            try {
+                Log.d("book", book.getDescription());
+                if (book.getDescription().contains(keyword1)) {
+                    bookSearch.add(document.toObject(Book.class));
+                }
+            } catch (Exception e) {
+                Log.d("Error", "failed search");
+            }
+        }
+        return bookSearch;
+    }
+
+    public Book getBook(String ISBN) {
+        DocumentReference bookRef = booksDB.collection("Books").document(ISBN);
+        Task<DocumentSnapshot> bookFind = bookRef.get();
+        try {
+            bookFind.wait();
+        } catch (Exception e) {
+            Log.d("Error", e.toString());
+        }
+        while (!bookFind.isComplete()) {
+        }
+        return (Book) bookFind.getResult().toObject(Book.class);
+    }
+
+    public void deleteBook(String ISBN) {
+        DocumentReference bookRef = booksDB.collection("Books").document(ISBN);
+        Task<Void> bookDelete = bookRef.delete();
+        while (!bookDelete.isComplete()) {
+        }
     }
 }
