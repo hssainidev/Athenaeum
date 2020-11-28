@@ -2,6 +2,7 @@ package com.example.athenaeum;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * This is a class of book objects that have an ISBN, author, title, status, and owner,
@@ -17,6 +18,8 @@ public class Book implements Serializable {
     private File photo;
     private String ownerUID;
     private String borrowerUID;
+    private final ArrayList<User> requesters = new ArrayList<>();
+
 
     /**
      * This constructs a Book object from a given ISBM, author, and title
@@ -174,4 +177,10 @@ public class Book implements Serializable {
         this.setStatus("Requested");
         this.borrowerUID = uid;
     }
+
+    public void addRequesters(User requester){
+        this.requesters.add(requester);
+    }
+
+    public ArrayList<User> getRequesters(){ return requesters;}
 }
