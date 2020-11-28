@@ -1,19 +1,13 @@
 package com.example.athenaeum;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.ExifInterface;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
@@ -22,16 +16,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.mlkit.vision.barcode.Barcode;
-import com.google.mlkit.vision.barcode.BarcodeScanner;
-import com.google.mlkit.vision.barcode.BarcodeScanning;
-import com.google.mlkit.vision.common.InputImage;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.journeyapps.barcodescanner.CaptureActivity;
 
 import java.util.List;
 
@@ -42,6 +28,7 @@ public class AddBookActivity extends AppCompatActivity {
     EditText ISBN;
     EditText title;
     EditText description;
+    ScanIsbn scanner = new ScanIsbn();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +47,7 @@ public class AddBookActivity extends AppCompatActivity {
         scan_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scanCode();
-                /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, pic_id);*/
+                scanner.scanCode(AddBookActivity.this);
             }
         });
 
@@ -93,16 +78,6 @@ public class AddBookActivity extends AppCompatActivity {
         });
     }
 
-    private void scanCode() {
-        IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setCaptureActivity(CaptureActivity.class);
-        integrator.setOrientationLocked(false);
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
-        integrator.setPrompt("Scanning Code...");
-        integrator.initiateScan();
-
-    }
-
     private String parseString(String givenString, String searchTerm) {
         if (givenString.indexOf(searchTerm) == -1) {
             return null;
@@ -115,25 +90,9 @@ public class AddBookActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
+            scanner.displayDialog(this, this, result.getContents());
             if (result.getContents() != null) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(result.getContents());
-                builder.setTitle("Scanning Result");
-                builder.setPositiveButton("Scan Again", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        scanCode();
-                    }
-                }).setNegativeButton("Choose This ISBN", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        retrieveBookInfo(result.getContents());
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            } else {
-                Toast.makeText(this, "No Results", Toast.LENGTH_LONG).show();
+                retrieveBookInfo(result.getContents());
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
