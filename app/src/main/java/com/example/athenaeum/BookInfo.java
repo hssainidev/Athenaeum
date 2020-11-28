@@ -14,15 +14,19 @@ import java.io.Serializable;
 // Can view all the details of a book
 public class BookInfo extends AppCompatActivity implements Serializable {
     private Book book;
+    private String uid;
     private BookDB bookDB;
+    private UserDB userDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.book);
         this.book = (Book) getIntent().getSerializableExtra("BOOK");
+        this.uid = (String) getIntent().getSerializableExtra("UID");
 
         bookDB = new BookDB();
+        userDB = new UserDB();
 
         // connecting the variables to the TextView components of the layout
         TextView title = (TextView) findViewById(R.id.book_title);
@@ -45,6 +49,19 @@ public class BookInfo extends AppCompatActivity implements Serializable {
                     book.setDescription(bookDesc.getText().toString());
                     bookDB.addBook(book);
                 }
+            }
+        });
+
+        // Delete a book
+        final Button delete_button = (Button) findViewById(R.id.delete_book);
+        delete_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bookDB.deleteBook(book.getISBN());
+                userDB.deleteBookFromUser(uid, book.getISBN());
+                Intent intent = new Intent(BookInfo.this, MainActivity.class);
+                intent.putExtra("UID", uid);
+                startActivity(intent);
             }
         });
 
