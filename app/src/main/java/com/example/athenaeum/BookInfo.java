@@ -49,12 +49,20 @@ public class BookInfo extends AppCompatActivity implements Serializable {
         });
 
         // View requests button for when the user is the owner of the book
-        // and has received atleast one request
+        // and has received at least one request
         final Button request_button = (Button) findViewById(R.id.view_requests);
         request_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(BookInfo.this, View_Request.class));
+            }
+        });
+
+        final Button location_button = (Button) findViewById(R.id.location);
+        location_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(BookInfo.this, MapActivity.class));
             }
         });
 //        final Button scan_button = (Button) findViewById(R.id.scan);
