@@ -129,6 +129,22 @@ public class MainActivity extends AppCompatActivity {
                             intent.putExtras(bundle);
                             startActivity(intent);
                         }
+                        else if (menuItem.getItemId() == R.id.menu_borrowed) {
+                            Intent intent=new Intent(MainActivity.this, BorrowedBookActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("UID", uid);
+                            bundle.putSerializable("profile", currentUser.getProfile());
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
+                        else if (menuItem.getItemId() == R.id.menu_requested) {
+                            Intent intent=new Intent(MainActivity.this, RequestedBookActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("UID", uid);
+                            bundle.putSerializable("profile", currentUser.getProfile());
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
                         return true;
                     }
                 });

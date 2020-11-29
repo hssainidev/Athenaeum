@@ -79,14 +79,35 @@ public class BookDB {
         for (QueryDocumentSnapshot document : bookQuery.getResult()) {
             Book book = document.toObject(Book.class);
             try {
-                if (book.getBorrowerUID().equals(borrowerUid)) {
+                Log.d("book", book.getDescription());
+                if (book.getBorrowerUID().equals(borrowerUid) && !book.getOwnerUID().equals(borrowerUid)) {
                     borrowedBooks.add(document.toObject(Book.class));
                 }
             } catch (Exception e) {
                 Log.d("Error", "failed finding borrowed books");
             }
         }
-        return borrowedBooks;
+            return borrowedBooks;
+    }
+
+    public ArrayList<Book> getRequestedBooks(String uid) {
+        final ArrayList<Book> bookRequest = new ArrayList<>();
+        final String uid1=uid;
+        Task<QuerySnapshot> bookQuery = booksDB.collection("Books").get();
+        while (!bookQuery.isComplete()) {
+        }
+        for (QueryDocumentSnapshot document : bookQuery.getResult()) {
+            Book book = document.toObject(Book.class);
+            try {
+                Log.d("book", book.getDescription());
+                if (book.getRequesters().contains(uid1) && book.getStatus().equals("Requested")) {
+                    bookRequest.add(document.toObject(Book.class));
+                }
+            } catch (Exception e) {
+                Log.d("Error", "failed getting requested books");
+            }
+        }
+        return bookRequest;
     }
 
     public Book getBook(String ISBN) {
