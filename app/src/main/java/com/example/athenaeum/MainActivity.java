@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 Book book = (Book) parent.getAdapter().getItem(position);
                 Intent intent = new Intent(MainActivity.this, BookInfo.class);
                 intent.putExtra("BOOK", book);
+                intent.putExtra("UID", uid);
                 startActivity(intent);
             }
         });

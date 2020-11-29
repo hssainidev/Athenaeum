@@ -62,5 +62,12 @@ public class UserDB {
         }
         return (User) userFind.getResult().toObject(User.class);
     }
+    public void deleteBookFromUser(String uid, String isbn) {
+        User user=getUser(uid);
+        ArrayList<String> books=user.getBooks();
+        books.remove(isbn);
+        user.setBooks(books);
+        addUser(user, uid);
+    }
 
 }
