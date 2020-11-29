@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.athenaeum">
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.CAMERA"></uses-permission>
+    <uses-feature android:name="android.hardware.camera"></uses-feature>
+    <uses-feature android:name="android.hardware.camera.autofocus"></uses-feature>
 
     <application
         android:allowBackup="true"
@@ -17,7 +21,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".BookInfo" />
+        <activity
+            android:name=".BookInfoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".ViewRequestActivity" />
         <activity
             android:name=".SignupActivity"
@@ -26,8 +32,15 @@
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".AddBookActivity" />
-        <activity android:name=".SearchActivity" />
+        <activity
+            android:name=".AddBookActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".SearchActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ScanActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

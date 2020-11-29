@@ -71,6 +71,24 @@ public class BookDB {
         return bookSearch;
     }
 
+    public ArrayList<Book> getBorrowedBooks(String borrowerUid) {
+        final ArrayList<Book> borrowedBooks = new ArrayList<>();
+        Task<QuerySnapshot> bookQuery = booksDB.collection("Books").get();
+        while (!bookQuery.isComplete()) {
+        }
+        for (QueryDocumentSnapshot document : bookQuery.getResult()) {
+            Book book = document.toObject(Book.class);
+            try {
+                if (book.getBorrowerUID().equals(borrowerUid)) {
+                    borrowedBooks.add(document.toObject(Book.class));
+                }
+            } catch (Exception e) {
+                Log.d("Error", "failed finding borrowed books");
+            }
+        }
+        return borrowedBooks;
+    }
+
     public Book getBook(String ISBN) {
         DocumentReference bookRef = booksDB.collection("Books").document(ISBN);
         Task<DocumentSnapshot> bookFind = bookRef.get();

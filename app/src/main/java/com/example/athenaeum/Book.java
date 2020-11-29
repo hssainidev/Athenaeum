@@ -187,7 +187,22 @@ public class Book implements Serializable {
         this.setStatus("Accepted");
         this.requesters.clear();
         this.requesters.add(uid);
+    }
 
+    public void giveBook(String ownerUid) {
+        this.setStatus("Borrowed");
+        this.setBorrowerUID(ownerUid);
+    }
+
+    public void returnBook(String ownerUid) {
+        this.requesters.clear();
+        this.setBorrowerUID(ownerUid);
+    }
+
+    public void receiveReturn() {
+        this.setStatus("Available");
+        this.requesters.clear();
+        this.setBorrowerUID(null);
     }
 
     public void confirm(String uid) {
