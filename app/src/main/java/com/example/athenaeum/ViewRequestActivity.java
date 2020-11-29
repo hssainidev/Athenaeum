@@ -19,9 +19,12 @@ public class ViewRequestActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_requests);
         final ListView list = findViewById(R.id.requester_list);
+        final BookDB booksDB=new BookDB();
 
         ArrayList<String> arrayList = new ArrayList<String>();
         Intent i = getIntent();
+        final Book book=(Book) getIntent().getSerializableExtra("BOOK");
+        final String uid=getIntent().getExtras().getString("UID");
 
 //        String isbn = intent.getStringExtra("book_ISBN");
 //        System.out.println(isbn);
@@ -29,37 +32,40 @@ public class ViewRequestActivity extends AppCompatActivity{
 //        System.out.println(book.getTitle());
 //        System.out.println(book.getRequesters().size());
 
-        Integer size = i.getIntExtra("num", 0);
+//        Integer size = i.getIntExtra("num", 0);
 
-        for(int j=0; j < size; j++){
-            String final_str = i.getStringExtra(String.valueOf(j));
-            arrayList.add(final_str);
-            System.out.println(final_str);
-        }
+//        for(String requester: book.getRequesters()){
+//            arrayList.add(requester);
+//            System.out.println(requester);
+//        }
+        arrayList=book.getRequesters();
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.view_requests_list, arrayList);
         list.setAdapter(arrayAdapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-//                String entry = (String) parent.getItemAtPosition(position);
-//                final Button accept_button = (Button) findViewById(R.id.accept);
-//                accept_button.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                    }
-//                });
-//
-//
-//                final Button decline_button = (Button) findViewById(R.id.decline);
-//                decline_button.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
+                final String entry = (String) parent.getItemAtPosition(position);
+                final Button accept_button = (Button) findViewById(R.id.accept);
+                accept_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        booksDB.acceptRequest(book, entry);
+                        Intent intent=new Intent(ViewRequestActivity.this, MainActivity.class);
+                        intent.putExtra("UID",uid);
+                        startActivity(intent);
+                    }
+                });
+
+
+                final Button decline_button = (Button) findViewById(R.id.decline);
+                decline_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 //                        list.remove(list.get(position));
 //                        arrayAdapter.notifyDataSetChanged();
-//                    }
-//                });
+                    }
+                });
             }
         });
     }

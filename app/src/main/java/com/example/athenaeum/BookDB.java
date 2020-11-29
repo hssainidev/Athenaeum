@@ -90,4 +90,16 @@ public class BookDB {
         while (!bookDelete.isComplete()) {
         }
     }
+    public void requestBook(Book book, String uid) {
+        book.request(uid);
+        this.addBook(book);
+    }
+    public void acceptRequest(Book book, String uid) {
+        book.accept(uid);
+        this.addBook(book);
+    }
+    public void confirmBorrow(Book book, String uid) {
+        book.confirm(uid);
+        this.addBook(book);
+    }
 }
