@@ -3,6 +3,7 @@ package com.example.athenaeum;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +24,6 @@ public class SearchActivity extends AppCompatActivity {
         final Button search = findViewById(R.id.search);
         final String uid = getIntent().getExtras().getString("UID");
         final BookDB db = new BookDB();
-        final Button back = findViewById(R.id.returnFromSearch);
 
 
         search.setOnClickListener(new View.OnClickListener() {
@@ -35,14 +35,17 @@ public class SearchActivity extends AppCompatActivity {
                 ArrayAdapter<Book> adapter = new CustomBookList(SearchActivity.this, list);
                 listView.setAdapter(adapter);
 
-            }
-        });
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SearchActivity.this, MainActivity.class);
-                intent.putExtra("UID", uid);
-                startActivity(intent);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Book book = (Book) parent.getAdapter().getItem(position);
+                        Intent intent = new Intent(SearchActivity.this, BookInfoActivity.class);
+                        intent.putExtra("BOOK", book);
+                        intent.putExtra("UID", uid);
+                        startActivity(intent);
+                    }
+                });
+
             }
         });
 
