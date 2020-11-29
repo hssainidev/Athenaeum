@@ -18,19 +18,19 @@ public class Request {
         this.RequestedBook = book;
         boolean duplicate = false;
 
-        for(int j=0; j < book.getRequesters().size(); j++){
-            if (book.getRequesters().get(j).getProfile().getEmail().equals(requester.getProfile().getEmail())){
-                duplicate = true;
-            }
-        }
-
-        if( duplicate){
-            return;
-        }
-        else {
-            this.RequestedBook.addRequesters(requester);
-//            System.out.println("Added to requesters list i think");
-        }
+//        for(int j=0; j < book.getRequesters().size(); j++){
+//            if (book.getRequesters().get(j).getProfile().getEmail().equals(requester.getProfile().getEmail())){
+//                duplicate = true;
+//            }
+//        }
+//
+//        if( duplicate){
+//            return;
+//        }
+//        else {
+//            this.RequestedBook.addRequesters(requester);
+////            System.out.println("Added to requesters list i think");
+//        }
     }
 
     public User getRequester(){
