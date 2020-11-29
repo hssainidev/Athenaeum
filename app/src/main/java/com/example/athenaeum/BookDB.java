@@ -71,6 +71,47 @@ public class BookDB {
         return bookSearch;
     }
 
+    public ArrayList<Book> getBorrowedBooks(String uid) {
+        final ArrayList<Book> bookBorrow = new ArrayList<>();
+        final String uid1=uid;
+        Task<QuerySnapshot> bookQuery = booksDB.collection("Books").get();
+        while (!bookQuery.isComplete()) {
+        }
+        for (QueryDocumentSnapshot document : bookQuery.getResult()) {
+            Book book = document.toObject(Book.class);
+            try {
+                Log.d("book", book.getDescription());
+                if (book.getBorrowerUID()==uid1 && book.getOwnerUID()!=uid1) {
+                    bookBorrow.add(document.toObject(Book.class));
+                }
+            } catch (Exception e) {
+                Log.d("Error", "failed getting borrowed books");
+            }
+        }
+        return bookBorrow;
+    }
+
+    public ArrayList<Book> getRequestedBooks(String uid) {
+        final ArrayList<Book> bookRequest = new ArrayList<>();
+        final String uid1=uid;
+        Task<QuerySnapshot> bookQuery = booksDB.collection("Books").get();
+        while (!bookQuery.isComplete()) {
+        }
+        for (QueryDocumentSnapshot document : bookQuery.getResult()) {
+            Book book = document.toObject(Book.class);
+            try {
+                Log.d("book", book.getDescription());
+                if (book.getRequesters().contains(uid1) && book.getStatus().equals("Requested")) {
+                    bookRequest.add(document.toObject(Book.class));
+                }
+            } catch (Exception e) {
+                Log.d("Error", "failed getting requested books");
+            }
+        }
+        return bookRequest;
+
+    }
+
     public Book getBook(String ISBN) {
         DocumentReference bookRef = booksDB.collection("Books").document(ISBN);
         Task<DocumentSnapshot> bookFind = bookRef.get();
