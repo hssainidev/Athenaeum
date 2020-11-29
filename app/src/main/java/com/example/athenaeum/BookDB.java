@@ -61,7 +61,8 @@ public class BookDB {
             Book book = document.toObject(Book.class);
             try {
                 Log.d("book", book.getDescription());
-                if (book.getDescription().contains(keyword1)) {
+                String fullDescription = book.getDescription()+book.getAuthor()+book.getISBN()+book.getTitle();
+                if (fullDescription.toLowerCase().contains(keyword1.toLowerCase())) {
                     bookSearch.add(document.toObject(Book.class));
                 }
             } catch (Exception e) {
