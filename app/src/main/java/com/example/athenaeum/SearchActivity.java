@@ -24,7 +24,6 @@ public class SearchActivity extends AppCompatActivity {
         final Button search = findViewById(R.id.search);
         final String uid = getIntent().getExtras().getString("UID");
         final BookDB db = new BookDB();
-        final Button back = findViewById(R.id.returnFromSearch);
 
 
         search.setOnClickListener(new View.OnClickListener() {
@@ -40,20 +39,13 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Book book = (Book) parent.getAdapter().getItem(position);
-                        Intent intent = new Intent(SearchActivity.this, BookInfo.class);
+                        Intent intent = new Intent(SearchActivity.this, BookInfoActivity.class);
                         intent.putExtra("BOOK", book);
+                        intent.putExtra("UID", uid);
                         startActivity(intent);
                     }
                 });
 
-            }
-        });
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SearchActivity.this, MainActivity.class);
-                intent.putExtra("UID", uid);
-                startActivity(intent);
             }
         });
 

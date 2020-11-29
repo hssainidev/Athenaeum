@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Book book = (Book) parent.getAdapter().getItem(position);
-                Intent intent = new Intent(MainActivity.this, BookInfo.class);
+                Intent intent = new Intent(MainActivity.this, BookInfoActivity.class);
                 intent.putExtra("BOOK", book);
                 intent.putExtra("UID", uid);
                 startActivity(intent);
@@ -120,6 +120,12 @@ public class MainActivity extends AppCompatActivity {
                             bundle.putSerializable("ownedBooks", currentUser.getBooks());
                             bundle.putSerializable("UID", uid);
                             bundle.putSerializable("profile", currentUser.getProfile());
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        } else if (menuItem.getItemId() == R.id.menu_scan) {
+                            Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("UID", uid);
                             intent.putExtras(bundle);
                             startActivity(intent);
                         }

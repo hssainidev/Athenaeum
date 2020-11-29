@@ -71,9 +71,8 @@ public class BookDB {
         return bookSearch;
     }
 
-    public ArrayList<Book> getBorrowedBooks(String uid) {
-        final ArrayList<Book> bookBorrow = new ArrayList<>();
-        final String uid1=uid;
+    public ArrayList<Book> getBorrowedBooks(String borrowerUid) {
+        final ArrayList<Book> borrowedBooks = new ArrayList<>();
         Task<QuerySnapshot> bookQuery = booksDB.collection("Books").get();
         while (!bookQuery.isComplete()) {
         }
@@ -81,14 +80,14 @@ public class BookDB {
             Book book = document.toObject(Book.class);
             try {
                 Log.d("book", book.getDescription());
-                if (book.getBorrowerUID()==uid1 && book.getOwnerUID()!=uid1) {
-                    bookBorrow.add(document.toObject(Book.class));
+                if (book.getBorrowerUID().equals(borrowerUid) && !book.getOwnerUID().equals(borrowerUid)) {
+                    borrowedBooks.add(document.toObject(Book.class));
                 }
             } catch (Exception e) {
-                Log.d("Error", "failed getting borrowed books");
+                Log.d("Error", "failed finding borrowed books");
             }
         }
-        return bookBorrow;
+            return borrowedBooks;
     }
 
     public ArrayList<Book> getRequestedBooks(String uid) {
@@ -109,7 +108,6 @@ public class BookDB {
             }
         }
         return bookRequest;
-
     }
 
     public Book getBook(String ISBN) {
@@ -130,5 +128,17 @@ public class BookDB {
         Task<Void> bookDelete = bookRef.delete();
         while (!bookDelete.isComplete()) {
         }
+    }
+    public void requestBook(Book book, String uid) {
+        book.request(uid);
+        this.addBook(book);
+    }
+    public void acceptRequest(Book book, String uid) {
+        book.accept(uid);
+        this.addBook(book);
+    }
+    public void confirmBorrow(Book book, String uid) {
+        book.confirm(uid);
+        this.addBook(book);
     }
 }

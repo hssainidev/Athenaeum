@@ -18,11 +18,11 @@ public class Book implements Serializable {
     private File photo;
     private String ownerUID;
     private String borrowerUID;
-    private final ArrayList<User> requesters = new ArrayList<>();
+    private ArrayList<String> requesters;
 
 
     /**
-     * This constructs a Book object from a given ISBM, author, and title
+     * This constructs a Book object from a given ISBN, author, and title
      *
      * @param ISBN   This is the ISBN of the book.
      * @param author This is the author of the book.
@@ -33,6 +33,7 @@ public class Book implements Serializable {
         this.author = author;
         this.title = title;
         this.status = "Available";
+        this.requesters = new ArrayList<>();
     }
 
     public Book() {
@@ -174,13 +175,50 @@ public class Book implements Serializable {
 
 
     public void request(String uid) {
-        this.setStatus("Requested");
-        this.borrowerUID = uid;
+        if (!this.getStatus().equals("Borrowed") && !this.getStatus().equals("Accepted")) {
+            this.setStatus("Requested");
+            if (!this.requesters.contains(uid)) {
+                this.requesters.add(uid);
+            }
+        }
     }
 
-    public void addRequesters(User requester){
-        this.requesters.add(requester);
+    public void accept(String uid) {
+        this.setStatus("Accepted");
+        this.requesters.clear();
+        this.requesters.add(uid);
     }
 
-    public ArrayList<User> getRequesters(){ return requesters;}
+    public void giveBook(String ownerUid) {
+        this.setStatus("Borrowed");
+        this.setBorrowerUID(ownerUid);
+    }
+
+    public void returnBook(String ownerUid) {
+        this.requesters.clear();
+        this.setBorrowerUID(ownerUid);
+    }
+
+    public void receiveReturn() {
+        this.setStatus("Available");
+        this.requesters.clear();
+        this.setBorrowerUID(null);
+    }
+
+    public void confirm(String uid) {
+        if (uid == this.requesters.get(0)) {
+            this.requesters.clear();
+            this.setBorrowerUID(uid);
+            this.setStatus("Borrowed");
+        }
+
+    }
+
+//    public void addRequesters(User requester){
+//        this.requesters.add(requester);
+//    }
+
+    public ArrayList<String> getRequesters() {
+        return this.requesters;
+    }
 }
