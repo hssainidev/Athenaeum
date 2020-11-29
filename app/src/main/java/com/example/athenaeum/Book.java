@@ -206,7 +206,7 @@ public class Book implements Serializable {
     }
 
     public void confirm(String uid) {
-        if (uid == this.requesters.get(0)) {
+        if (uid.equals(this.requesters.get(0))) {
             this.requesters.clear();
             this.setBorrowerUID(uid);
             this.setStatus("Borrowed");

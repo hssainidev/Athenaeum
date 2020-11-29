@@ -14,7 +14,7 @@
         android:textStyle="bold" />
 
     <ListView
-        android:id="@+id/myBookList"
+        android:id="@+id/borrowedBookList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/headerLabel" />

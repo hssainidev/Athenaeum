@@ -9,7 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class RequestedBookActivity extends AppCompatActivity {
+public class BorrowedBookActivity extends AppCompatActivity {
+
     TextView name;
     ListView bookList;
     ArrayAdapter<Book> bookAdapter;
@@ -19,18 +20,17 @@ public class RequestedBookActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
-        setContentView(R.layout.activity_requestedbooklist);
+        setContentView(R.layout.activity_borrowedbooklist);
         final String uid=getIntent().getExtras().getString("UID");
         AthenaeumProfile profile = (AthenaeumProfile) getIntent().getExtras().getSerializable("profile");
-        bookDataList = (ArrayList<Book>) booksDB.getRequestedBooks(uid);
+        bookDataList = (ArrayList<Book>) booksDB.getBorrowedBooks(uid);
         name = findViewById(R.id.headerLabel);
-        name.setText(String.format("Books Requested by %s", profile.getUsername()));
+        name.setText(String.format("Books Borrowed by %s", profile.getUsername()));
 
-        bookList = findViewById(R.id.requestedBookList);
+        bookList = findViewById(R.id.borrowedBookList);
+
         bookAdapter = new CustomBookList(this, bookDataList);
         bookList.setAdapter(bookAdapter);
 
     }
-
-
 }
