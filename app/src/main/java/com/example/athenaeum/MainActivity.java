@@ -122,6 +122,12 @@ public class MainActivity extends AppCompatActivity {
                             bundle.putSerializable("profile", currentUser.getProfile());
                             intent.putExtras(bundle);
                             startActivity(intent);
+                        } else if (menuItem.getItemId() == R.id.menu_scan) {
+                            Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("UID", uid);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
                         }
                         return true;
                     }

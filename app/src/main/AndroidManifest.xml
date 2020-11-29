@@ -32,6 +32,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".AddBookActivity" />
         <activity android:name=".SearchActivity" />
+        <activity android:name=".ScanActivity" />
         <activity
             android:name=".ProfileActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
