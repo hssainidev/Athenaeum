@@ -2,7 +2,6 @@ package com.example.athenaeum;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,12 +9,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseUser;
-
 import java.io.Serializable;
 
 // Can view all the details of a book
-public class BookInfo extends AppCompatActivity implements Serializable {
+public class BookInfoActivity extends AppCompatActivity implements Serializable {
     private Book book;
     private String uid;
     private BookDB bookDB;
@@ -24,7 +21,7 @@ public class BookInfo extends AppCompatActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.book);
+        setContentView(R.layout.activity_book_info);
         this.book = (Book) getIntent().getSerializableExtra("BOOK");
         this.uid = (String) getIntent().getExtras().getString("UID");
         System.out.println(uid);
@@ -63,7 +60,7 @@ public class BookInfo extends AppCompatActivity implements Serializable {
             public void onClick(View view) {
                 bookDB.deleteBook(book.getISBN());
                 userDB.deleteBookFromUser(uid, book.getISBN());
-                Intent intent = new Intent(BookInfo.this, MainActivity.class);
+                Intent intent = new Intent(BookInfoActivity.this, MainActivity.class);
                 intent.putExtra("UID", uid);
                 startActivity(intent);
             }
@@ -85,7 +82,7 @@ public class BookInfo extends AppCompatActivity implements Serializable {
         viewRequests_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(BookInfo.this, ViewRequestActivity.class);
+                Intent i = new Intent(BookInfoActivity.this, ViewRequestActivity.class);
 //                i.putExtra("book_ISBN", book.getISBN());
                 i.putExtra("BOOK", book);
                 i.putExtra("UID", uid);

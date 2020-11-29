@@ -10,34 +10,35 @@
         android:id="@+id/scan_isbn_editText"
         android:layout_width="251dp"
         android:layout_height="51dp"
-        android:layout_marginTop="292dp"
+        android:layout_marginTop="196dp"
         android:background="#EDEDED"
         android:ems="10"
         android:hint="ISBN"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.193"
+        app:layout_constraintHorizontal_bias="0.262"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/open_scanner_button"
-        android:layout_width="52dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="292dp"
-        android:background="@android:drawable/ic_menu_camera"
-        app:layout_constraintStart_toEndOf="@+id/scan_isbn_editText"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/confirm_scan_button"
         android:layout_width="282dp"
         android:layout_height="53dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:text="Change Book Status"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.581"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scan_isbn_editText" />
+
+    <Button
+        android:id="@+id/open_scanner_button"
+        android:layout_width="52dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="196dp"
+        android:background="@android:drawable/ic_menu_camera"
+        app:layout_constraintStart_toEndOf="@+id/scan_isbn_editText"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

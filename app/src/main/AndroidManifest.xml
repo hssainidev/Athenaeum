@@ -21,7 +21,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".BookInfo" />
+        <activity
+            android:name=".BookInfoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".ViewRequestActivity" />
         <activity
             android:name=".SignupActivity"
@@ -30,9 +32,15 @@
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".AddBookActivity" />
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".ScanActivity" />
+        <activity
+            android:name=".AddBookActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".SearchActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ScanActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
