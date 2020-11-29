@@ -42,6 +42,7 @@ public class SearchActivity extends AppCompatActivity {
                         Book book = (Book) parent.getAdapter().getItem(position);
                         Intent intent = new Intent(SearchActivity.this, BookInfo.class);
                         intent.putExtra("BOOK", book);
+                        intent.putExtra("UID", uid);
                         startActivity(intent);
                     }
                 });
