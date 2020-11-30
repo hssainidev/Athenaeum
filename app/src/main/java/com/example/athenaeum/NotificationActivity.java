@@ -32,6 +32,7 @@ public class NotificationActivity extends AppCompatActivity {
 
         final String uid = getIntent().getExtras().getString("UID");
         final ArrayList<String> books = (ArrayList<String>) getIntent().getExtras().getSerializable("ownedBooks");
+        final ArrayList<Book> acceptedBooks=(ArrayList<Book>) getIntent().getExtras().getSerializable("acceptedBooks");
         final UserDB users = new UserDB();
         final BookDB booksDB = new BookDB();
         final User currentUser = users.getUser(uid);
@@ -69,23 +70,20 @@ public class NotificationActivity extends AppCompatActivity {
                             Log.d(TAG, "Current data: " + snapshot.getData());
 
                         }
-                        if (Objects.equals(data.get("status"), "Accepted")) {
 
-                            ArrayList<String> requesters = (ArrayList<String>) data.get("requesters");
-                            if (requesters.contains(uid)) {
-                                String ownerUID = (String) data.get("ownerUID");
-                                User owner = users.getUser(ownerUID);
-                                String title = (String) data.get("title");
-                                TextView acceptedString=new TextView(NotificationActivity.this);
-                                acceptedString.setText(String.format("%s has accepted your request on %s", owner.getProfile().getUsername(), title));
-                                linearLayout.addView(acceptedString);
-                            }
-                        }
                     } else {
                         Log.d(TAG, "Current data: null");
                     }
                 }
             });
+        }
+        for (Book book: acceptedBooks) {
+            User owner=users.getUser(book.getOwnerUID());
+            String title=book.getTitle();
+            TextView acceptedString=new TextView(NotificationActivity.this);
+            acceptedString.setText(String.format("%s has accepted your request for %s", owner.getProfile().getUsername(), title));
+            linearLayout.addView(acceptedString);
+
         }
 
 
