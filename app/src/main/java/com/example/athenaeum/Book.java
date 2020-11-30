@@ -1,5 +1,7 @@
 package com.example.athenaeum;
 
+import android.net.Uri;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ public class Book implements Serializable {
     private String description;
     private String title;
     private String status;
-    private File photo;
+    private Boolean photo;
     private String ownerUID;
     private String borrowerUID;
     private ArrayList<String> requesters;
@@ -129,23 +131,6 @@ public class Book implements Serializable {
         this.status = status;
     }
 
-    /**
-     * This returns the book's photo
-     *
-     * @return Return the photo of the book.
-     */
-    public File getPhoto() {
-        return photo;
-    }
-
-    /**
-     * This sets a book's photo
-     *
-     * @param photo This is the new photo.
-     */
-    public void setPhoto(File photo) {
-        this.photo = photo;
-    }
 
     /**
      * This returns the book's owner
@@ -212,6 +197,16 @@ public class Book implements Serializable {
         }
 
     }
+    public void setPhoto() {
+        this.photo=true;
+    }
+    public void removePhoto() {
+        this.photo=false;
+    }
+    public Boolean getPhoto() {
+        return this.photo;
+    }
+
 
 //    public void addRequesters(User requester){
 //        this.requesters.add(requester);

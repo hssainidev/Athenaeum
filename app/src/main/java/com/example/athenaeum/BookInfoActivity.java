@@ -1,15 +1,28 @@
 package com.example.athenaeum;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.Serializable;
 
@@ -19,6 +32,9 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
     private String uid;
     private BookDB bookDB;
     private UserDB userDB;
+    private ImageView imageView;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +46,8 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
 
         bookDB = new BookDB();
         userDB = new UserDB();
+        storage=FirebaseStorage.getInstance();
+        storageReference=storage.getReference();
 
         final boolean ownsBook = book.getOwnerUID().equals(uid);
 
@@ -99,6 +117,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
         }
 
         final Button request_button = (Button) findViewById(R.id.request);
+
         if (ownsBook) {
             request_button.setVisibility(View.GONE);
         } else {
@@ -145,11 +164,77 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                 }
             });
         }
+        imageView = findViewById(R.id.image);
+        if (book.getPhoto()!=null) {
+            imageView.setImageURI(Uri.parse(book.getPhoto().toString()));
+            System.out.println("Reached"+book.getPhoto());
+        }
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 9);
+
+            }
+        });
+
+
+//        final Button scan_button = (Button) findViewById(R.id.scan);
+//        final Button location_button = (Button) findViewById(R.id.location);
+//        if(status.getText() != "requested"){
+//            request_button.setVisibility(Button.GONE);
+//        }
+//        else{
+//            request_button.setVisibility(Button.VISIBLE);
+//        }
+//        if (status.getText() == "borrowed"){
+//            scan_button.setVisibility(Button.VISIBLE);
+//            location_button.setVisibility(Button.VISIBLE);
+//        }
+//        else {
+//            scan_button.setVisibility(Button.GONE);
+//            location_button.setVisibility(Button.GONE);
+//        }
+
 
 
         final Button location_button = (Button) findViewById(R.id.location);
         if (!book.getStatus().equals("Accepted")) {
             location_button.setVisibility(Button.GONE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 9 && resultCode == RESULT_OK && data != null) {
+
+            //Get selected image uri here
+            Uri imageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                imageView.setImageBitmap(bitmap);
+                StorageReference ref=storageReference.child(book.getISBN());
+                ref.putFile(imageUri)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                bookDB.addPhoto(book);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }
