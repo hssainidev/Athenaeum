@@ -2,6 +2,8 @@ package com.example.athenaeum;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 public class NotificationActivity extends AppCompatActivity {
 
@@ -41,7 +44,24 @@ public class NotificationActivity extends AppCompatActivity {
                     if (snapshot != null && snapshot.exists()) {
                         Map<String, Object> data = snapshot.getData();
 
-                        if (data.get("status") != "Available") {
+                        if (Objects.equals(data.get("status"), "Requested")) {
+                            ArrayList<String> requesters = (ArrayList<String>) data.get("requesters");
+                            String borrowerUID = (String) data.get("borrowerUID");
+                            User borrower = null;
+                            if (borrowerUID != null) {
+                                borrower = users.getUser(borrowerUID);
+                            }
+                            String title = (String) data.get("title");
+                            String ownerUID = (String) data.get("ownerUID");
+                            User owner = users.getUser(ownerUID);
+                            LinearLayout linearLayout = findViewById(R.id.notification_activity);
+
+                            TextView requestedString = new TextView(NotificationActivity.this);
+                            requestedString.setText(String.format("%s has requested %s", borrower, title));
+//                            linearLayout.setBackgroundColor(Color.TRANSPARENT);
+                            linearLayout.addView(requestedString);
+
+
                             Log.d(TAG, "Current data: " + snapshot.getData());
 
                         }
