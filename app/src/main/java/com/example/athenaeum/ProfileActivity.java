@@ -154,8 +154,11 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         });
     }
 
-    //when user finishes EditProfileFragment by pressing ok, update user in the firestore db
-    //and update the data displayed in the ProfileActivity
+    /**
+     * When user finishes EditProfileFragment by pressing ok, update user in the firestore db
+     * and update the data displayed in the ProfileActivity.
+     * @param bundle A Bundle containing the strings to be used to update.
+     */
     @Override
     public void onOkPressed(Bundle bundle) {
         User user = (User) getIntent().getExtras().getSerializable("user");
