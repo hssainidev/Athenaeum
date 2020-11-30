@@ -56,6 +56,7 @@ public class UserDB {
 
     /**
      * This returns the Users collection from the connected database.
+     *
      * @return Return the Users collection.
      */
     public CollectionReference getCollection() {
