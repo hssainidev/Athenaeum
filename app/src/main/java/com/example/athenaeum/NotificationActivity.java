@@ -3,6 +3,7 @@ package com.example.athenaeum;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.TextClock;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -67,6 +68,18 @@ public class NotificationActivity extends AppCompatActivity {
 
                             Log.d(TAG, "Current data: " + snapshot.getData());
 
+                        }
+                        if (Objects.equals(data.get("status"), "Accepted")) {
+
+                            ArrayList<String> requesters = (ArrayList<String>) data.get("requesters");
+                            if (requesters.contains(uid)) {
+                                String ownerUID = (String) data.get("ownerUID");
+                                User owner = users.getUser(ownerUID);
+                                String title = (String) data.get("title");
+                                TextView acceptedString=new TextView(NotificationActivity.this);
+                                acceptedString.setText(String.format("%s has accepted your request on %s", owner.getProfile().getUsername(), title));
+                                linearLayout.addView(acceptedString);
+                            }
                         }
                     } else {
                         Log.d(TAG, "Current data: null");
