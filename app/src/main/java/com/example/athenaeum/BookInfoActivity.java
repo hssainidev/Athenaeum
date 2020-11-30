@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -32,6 +33,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
     private String uid;
     private BookDB bookDB;
     private UserDB userDB;
+    private int requestCode = 1;
     private ImageView imageView;
     private FirebaseStorage storage;
     private StorageReference storageReference;
@@ -56,7 +58,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
         final EditText author = findViewById(R.id.book_info_author);
         final EditText bookDesc = (EditText) findViewById(R.id.description);
         TextView isbn = findViewById(R.id.book_info_isbn);
-        TextView status = (TextView) findViewById(R.id.status);
+        final TextView status = (TextView) findViewById(R.id.status);
 
         // updating the variables to the corresponding values
         title.setText(book.getTitle());
@@ -69,6 +71,18 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
         }
         isbn.setText(book.getISBN());
         status.setText(book.getStatus());
+
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.book_info_toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        TextView toolbar_title = findViewById(R.id.book_toolbar_title);
+        toolbar_title.setText(book.getTitle() + "'s Info");
 
         // Update the book description if it has changed
         final Button update_button = (Button) findViewById(R.id.update_book_info);
@@ -116,20 +130,25 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
             });
         }
 
+        boolean requestedByUser = (book.getStatus().equals("Requested") && book.getRequesters().contains(uid));
         final Button request_button = (Button) findViewById(R.id.request);
-
-        if (ownsBook) {
+        if (ownsBook || (!book.getStatus().equals("Available") && (!book.getStatus().equals("Requested") || requestedByUser))) {
             request_button.setVisibility(View.GONE);
         } else {
-            if (ownsBook) {
-                Toast.makeText(BookInfoActivity.this, "You cannot request a book that you own!", Toast.LENGTH_LONG).show();
-            }
             request_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (ownsBook) {
+                        Toast.makeText(BookInfoActivity.this, "You cannot request a book that you own!", Toast.LENGTH_LONG).show();
+                    } else if (!book.getStatus().equals("Available")) {
+                        Toast.makeText(BookInfoActivity.this, "You cannot request this book right now!", Toast.LENGTH_LONG).show();
+                    }
                     System.out.println((null == uid) ? "Yes" : "No");
                     bookDB.requestBook(book, uid);
                     System.out.println("After going to Request function");
+                    status.setText(book.getStatus());
+                    request_button.setVisibility(View.GONE);
+                    Toast.makeText(BookInfoActivity.this, "Request sent!", Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -149,17 +168,8 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                         Toast.makeText(BookInfoActivity.this, "This book has no current requests to view!", Toast.LENGTH_LONG).show();
                     }
                     Intent i = new Intent(BookInfoActivity.this, ViewRequestActivity.class);
-//                i.putExtra("book_ISBN", book.getISBN());
                     i.putExtra("BOOK", book);
                     i.putExtra("UID", uid);
-//                i.putExtra("num", book.getRequesters().size());
-//                System.out.println(book.getRequesters().size());
-//                for(int j=0; j < book.getRequesters().size(); j++){
-//                    String str=userDB.getUser(book.getRequesters().get(j)).getProfile().getUsername();
-//                    String final_str = (book.getTitle() + " is requested by user: " + str);
-//                    System.out.println(final_str);
-//                    i.putExtra(String.valueOf(j), final_str);
-//                }
                     startActivity(i);
                 }
             });
@@ -180,29 +190,22 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
             }
         });
 
-
-//        final Button scan_button = (Button) findViewById(R.id.scan);
-//        final Button location_button = (Button) findViewById(R.id.location);
-//        if(status.getText() != "requested"){
-//            request_button.setVisibility(Button.GONE);
-//        }
-//        else{
-//            request_button.setVisibility(Button.VISIBLE);
-//        }
-//        if (status.getText() == "borrowed"){
-//            scan_button.setVisibility(Button.VISIBLE);
-//            location_button.setVisibility(Button.VISIBLE);
-//        }
-//        else {
-//            scan_button.setVisibility(Button.GONE);
-//            location_button.setVisibility(Button.GONE);
-//        }
-
-
-
         final Button location_button = (Button) findViewById(R.id.location);
-        if (!book.getStatus().equals("Accepted")) {
-            location_button.setVisibility(Button.GONE);
+        // Boolean for whether a book is accepted and currently in the owner's possession for them to set a location.
+        boolean acceptedBook = (book.getStatus().equals("Accepted") && book.getOwnerUID().equals(uid));
+        // Boolean for whether a book is marked as accepted by the owner and the location is set.
+        boolean borrowingBook = (book.getStatus().equals("Accepted") && book.getRequesters().contains(uid) && book.getLocation() != null);
+        if (acceptedBook || borrowingBook) {
+            location_button.setVisibility(View.VISIBLE);
+            location_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(BookInfoActivity.this, MapActivity.class);
+                    intent.putExtra("BOOK", book);
+                    intent.putExtra("UID", uid);
+                    startActivityForResult(intent, requestCode);
+                }
+            });
         }
     }
 
@@ -234,7 +237,10 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+        } else if (resultCode == this.requestCode) {
+            LatLng location = data.getExtras().getParcelable("LOCATION");
+            book.setLocation(location.latitude, location.longitude);
+            bookDB.addBook(book);
         }
     }
 }
