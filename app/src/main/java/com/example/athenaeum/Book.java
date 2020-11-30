@@ -35,6 +35,7 @@ public class Book implements Serializable {
         this.title = title;
         this.status = "Available";
         this.requesters = new ArrayList<>();
+        this.photo=false;
     }
 
     public Book() {

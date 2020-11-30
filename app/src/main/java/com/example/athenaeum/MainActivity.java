@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
                             bundle.putSerializable("ownedBooks", currentUser.getBooks());
                             bundle.putSerializable("UID", uid);
                             bundle.putSerializable("profile", currentUser.getProfile());
+                            bundle.putSerializable("acceptedBooks", booksDB.getAcceptedBooks(uid));
                             intent.putExtras(bundle);
                             startActivity(intent);
                         } else if (menuItem.getItemId() == R.id.menu_scan) {
