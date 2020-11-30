@@ -1,6 +1,7 @@
 package com.example.athenaeum;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -92,7 +93,30 @@ public class MainActivity extends AppCompatActivity {
         final NavigationView navigationView = findViewById(R.id.nav_view);
 
 
-        final int[] notificationCounter = new int[]{0};
+        int notificationCounter = 0;
+        ArrayList<Book> acceptedBooks = booksDB.getAcceptedBooks(uid);
+        for (Book book : acceptedBooks) {
+            notificationCounter++;
+        }
+        for (String isbn : user_ISBNs) {
+            Book book = booksDB.getBook(isbn);
+            if (book.getStatus().equals("Requested")) {
+                ArrayList<String> requesters = book.getRequesters();
+                if (requesters.size() > 0) {
+                    notificationCounter += requesters.size();
+                }
+            }
+        }
+        if (notificationCounter > 0) {
+            TextView view = (TextView) navigationView.getMenu().findItem(R.id.menu_notifications).getActionView();
+            view.setWidth(80);
+            view.setHeight(80);
+            view.setText(String.valueOf(notificationCounter));
+            view.setTextColor(Color.WHITE);
+
+            view.setBackground(getResources().getDrawable(R.drawable.shape));
+        }
+        /*final int[] notificationCounter = new int[]{0};
         for (String book : user_ISBNs) {
             final DocumentReference documentReference = FirebaseFirestore.getInstance().collection("Books").document(book);
             documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -108,7 +132,12 @@ public class MainActivity extends AppCompatActivity {
                         assert data != null;
                         Object myVar = data.get("status");
                         if (!Objects.equals(data.get("status"), "Available")) {
-                            notificationCounter[0]++;
+                            ArrayList<String> requesters = (ArrayList<String>) data.get("requesters");
+                            if (requesters.size() > 0) {
+                                notificationCounter[0] += requesters.size();
+                            } else {
+                                notificationCounter[0]++;
+                            }
                             Log.d(TAG, "Current data: " + snapshot.getData());
                             TextView view = (TextView) navigationView.getMenu().findItem(R.id.menu_notifications).getActionView();
                             view.setText(String.valueOf(notificationCounter[0]));
@@ -121,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-        }
+        }*/
 
 
         // Add the current user's name and username to the header.
