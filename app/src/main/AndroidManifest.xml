@@ -36,7 +36,8 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".MapActivity" />
+            android:name=".MapActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".AddBookActivity" />
         <activity
@@ -49,7 +50,8 @@
             android:name=".ProfileActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".OwnedBookActivity" />
+            android:name=".OwnedBookActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".NotificationActivity"
             android:parentActivityName=".MainActivity" />

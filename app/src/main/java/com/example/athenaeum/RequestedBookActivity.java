@@ -1,6 +1,9 @@
 package com.example.athenaeum;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,7 +23,7 @@ public class RequestedBookActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_requestedbooklist);
-        final String uid=getIntent().getExtras().getString("UID");
+        final String uid = getIntent().getExtras().getString("UID");
         AthenaeumProfile profile = (AthenaeumProfile) getIntent().getExtras().getSerializable("profile");
         bookDataList = (ArrayList<Book>) booksDB.getRequestedBooks(uid);
         name = findViewById(R.id.headerLabel);
@@ -29,6 +32,17 @@ public class RequestedBookActivity extends AppCompatActivity {
         bookList = findViewById(R.id.requestedBookList);
         bookAdapter = new CustomBookList(this, bookDataList);
         bookList.setAdapter(bookAdapter);
+
+        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Book book = (Book) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(RequestedBookActivity.this, BookInfoActivity.class);
+                intent.putExtra("BOOK", book);
+                intent.putExtra("UID", uid);
+                startActivity(intent);
+            }
+        });
 
     }
 

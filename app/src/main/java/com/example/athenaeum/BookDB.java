@@ -101,7 +101,8 @@ public class BookDB {
             Book book = document.toObject(Book.class);
             try {
                 Log.d("book", book.getDescription());
-                if (book.getRequesters().contains(uid1) && book.getStatus().equals("Requested")) {
+                boolean borrowConfirm = (book.getStatus().equals("Borrowed") && book.getBorrowerUID().equals(book.getOwnerUID()));
+                if (book.getRequesters().contains(uid1) && (book.getStatus().equals("Requested") || borrowConfirm || book.getStatus().equals("Accepted"))) {
                     bookRequest.add(document.toObject(Book.class));
                 }
             } catch (Exception e) {

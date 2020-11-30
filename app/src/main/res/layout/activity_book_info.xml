@@ -14,24 +14,31 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="?attr/homeAsUpIndicator" ></androidx.appcompat.widget.Toolbar>
+        app:navigationIcon="?attr/homeAsUpIndicator" >
+
+        <TextView
+            android:id="@+id/book_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Toolbar Title"
+            android:textSize="24sp" />
+    </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="60dp"
-        android:layout_marginLeft="16dp">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/book_info_toolbar" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="16dp">
 
             <EditText
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
-                android:layout_marginEnd="16dp"
                 android:hint="Description (Optional)"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -42,7 +49,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="29dp"
-                android:layout_marginEnd="16dp"
                 android:text="Status"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -52,10 +58,9 @@
                 android:id="@+id/update_book_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
                 android:background="@color/colorButton"
-                android:textColor="#FFFFFF"
                 android:text="Update Information"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/description"
@@ -65,17 +70,16 @@
                 android:id="@+id/location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="100dp"
                 android:layout_marginBottom="4dp"
                 android:background="@color/colorButton"
-                android:textColor="#FFFFFF"
                 android:text="@string/location"
-                android:visibility="visible"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/delete_book"
+                app:layout_constraintTop_toBottomOf="@+id/status"
                 tools:visibility="visible" />
 
             <Button
@@ -83,10 +87,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
                 android:background="@color/colorButton"
-                android:textColor="#FFFFFF"
                 android:text="Delete Book"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/status"
@@ -96,8 +99,7 @@
                 android:id="@+id/book_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="40dp"
                 android:hint="Title"
                 android:textSize="36sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -117,10 +119,9 @@
                 android:id="@+id/book_info_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minWidth="300dp"
+                android:layout_marginTop="10dp"
                 android:hint="Author"
                 android:textSize="25sp"
-                android:layout_marginTop="10dp"
                 app:layout_constraintStart_toEndOf="@+id/book_author_intro"
                 app:layout_constraintTop_toBottomOf="@+id/book_title" />
 
@@ -133,34 +134,32 @@
                 android:textSize="20sp"
                 app:layout_constraintTop_toBottomOf="@+id/book_info_author" />
 
+            <Button
+                android:id="@+id/request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorButton"
+                android:text="Request"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_marginTop="100dp"
+                tools:visibility="visible"
+                app:layout_constraintTop_toBottomOf="@+id/status" />
+
+            <Button
+                android:id="@+id/view_requests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorButton"
+                android:text="@string/view_requests"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:layout_marginTop="100dp"
+                tools:visibility="visible"
+                app:layout_constraintTop_toBottomOf="@+id/status" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
-    <Button
-        android:id="@+id/request"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:text="Request"
-        android:background="@color/colorButton"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/view_requests"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/view_requests"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:background="@color/colorButton"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="4dp"
-        android:text="@string/view_requests"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
