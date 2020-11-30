@@ -1,8 +1,8 @@
 package com.example.athenaeum;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * This is a class of book objects that have an ISBN, author, title, status, and owner,
@@ -15,9 +15,10 @@ public class Book implements Serializable {
     private String description;
     private String title;
     private String status;
-    private File photo;
+    private Boolean photo;
     private String ownerUID;
     private String borrowerUID;
+    private BookLocation location;
     private ArrayList<String> requesters;
 
 
@@ -129,23 +130,6 @@ public class Book implements Serializable {
         this.status = status;
     }
 
-    /**
-     * This returns the book's photo
-     *
-     * @return Return the photo of the book.
-     */
-    public File getPhoto() {
-        return photo;
-    }
-
-    /**
-     * This sets a book's photo
-     *
-     * @param photo This is the new photo.
-     */
-    public void setPhoto(File photo) {
-        this.photo = photo;
-    }
 
     /**
      * This returns the book's owner
@@ -173,6 +157,29 @@ public class Book implements Serializable {
         this.borrowerUID = borrowerUID;
     }
 
+    public void setLocation(Map<String, Object> location) {
+        if (location == null || location.size() == 0) {
+            this.location = null;
+        } else {
+            Map<String, Object> values = (Map<String, Object>) location.get("location");
+            if (values.size() == 2) {
+                double latitude = (double) values.get("latitude");
+                double longitude = (double) values.get("longitude");
+                this.location = new BookLocation(latitude, longitude);
+            } else {
+                this.location = null;
+            }
+        }
+    }
+
+    public void setLocation(double lat, double lon) {
+        this.location = new BookLocation(lat, lon);
+    }
+
+    //public void setLocation(double lat, double lon) { this.location = new BookLocation(lat, lon); }
+
+    public BookLocation getLocation() { return this.location; }
+
 
     public void request(String uid) {
         if (!this.getStatus().equals("Borrowed") && !this.getStatus().equals("Accepted")) {
@@ -194,14 +201,13 @@ public class Book implements Serializable {
         this.setBorrowerUID(ownerUid);
     }
 
-    public void returnBook(String ownerUid) {
+    public void returnBook() {
         this.requesters.clear();
-        this.setBorrowerUID(ownerUid);
+        this.setStatus("Available");
     }
 
     public void receiveReturn() {
         this.setStatus("Available");
-        this.requesters.clear();
         this.setBorrowerUID(null);
     }
 
@@ -213,6 +219,16 @@ public class Book implements Serializable {
         }
 
     }
+    public void setPhoto() {
+        this.photo = true;
+    }
+    public void removePhoto() {
+        this.photo = false;
+    }
+    public Boolean getPhoto() {
+        return this.photo;
+    }
+
 
 //    public void addRequesters(User requester){
 //        this.requesters.add(requester);
