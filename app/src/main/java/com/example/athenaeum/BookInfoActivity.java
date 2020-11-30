@@ -1,17 +1,29 @@
 package com.example.athenaeum;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.Serializable;
 
@@ -22,6 +34,9 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
     private BookDB bookDB;
     private UserDB userDB;
     private int requestCode = 1;
+    private ImageView imageView;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +48,8 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
 
         bookDB = new BookDB();
         userDB = new UserDB();
+        storage=FirebaseStorage.getInstance();
+        storageReference=storage.getReference();
 
         final boolean ownsBook = book.getOwnerUID().equals(uid);
 
@@ -157,6 +174,21 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                 }
             });
         }
+        imageView = findViewById(R.id.image);
+        if (book.getPhoto()!=null) {
+            imageView.setImageURI(Uri.parse(book.getPhoto().toString()));
+            System.out.println("Reached"+book.getPhoto());
+        }
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 9);
+
+            }
+        });
 
         final Button location_button = (Button) findViewById(R.id.location);
         // Boolean for whether a book is accepted and currently in the owner's possession for them to set a location.
@@ -178,9 +210,34 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == this.requestCode) {
+        if (requestCode == 9 && resultCode == RESULT_OK && data != null) {
+
+            //Get selected image uri here
+            Uri imageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                imageView.setImageBitmap(bitmap);
+                StorageReference ref=storageReference.child(book.getISBN());
+                ref.putFile(imageUri)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                bookDB.addPhoto(book);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (resultCode == this.requestCode) {
             LatLng location = data.getExtras().getParcelable("LOCATION");
             book.setLocation(location.latitude, location.longitude);
             bookDB.addBook(book);

@@ -11,10 +11,12 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:layout_marginTop="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="?attr/homeAsUpIndicator" >
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:layout_constraintBottom_toTopOf="@+id/scroll_view"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <TextView
             android:id="@+id/book_toolbar_title"
@@ -25,6 +27,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/book_info_toolbar" >
@@ -78,9 +81,9 @@
                 android:textSize="18sp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/image"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/status"
-                tools:visibility="visible" />
+                app:layout_constraintTop_toBottomOf="@+id/status" />
 
             <Button
                 android:id="@+id/delete_book"
@@ -93,6 +96,7 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/status"
+                app:layout_constraintBottom_toTopOf="@id/location"
                 tools:visibility="visible" />
 
             <EditText
@@ -104,6 +108,16 @@
                 android:textSize="36sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="50dp"
+                android:layout_height="200dp"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/book_author_intro"
@@ -131,6 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="ISBN"
+                app:layout_constraintHorizontal_bias="0.5"
                 android:textSize="20sp"
                 app:layout_constraintTop_toBottomOf="@+id/book_info_author" />
 
@@ -161,5 +176,4 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
