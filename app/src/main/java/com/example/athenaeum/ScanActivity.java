@@ -51,23 +51,23 @@ public class ScanActivity extends AppCompatActivity {
                 if (book.getOwnerUID().equals(uid)) {
                     if (book.getStatus().equals("Accepted")) {
                         // Confirming book was given to borrower.
-                        book.giveBook(uid);
+                        booksDB.giveBookUpdate(book, uid);
                         Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was given to the borrower!", Toast.LENGTH_LONG).show();
                         return;
-                    } else if (book.getStatus().equals("Borrowed") && book.getBorrowerUID().equals(uid)) {
+                    } else if (book.getStatus().equals("Available") && !book.getBorrowerUID().equals(uid)) {
                         // Confirming book was received from borrower.
-                        book.receiveReturn();
+                        booksDB.confirmReturn(book);
                         Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was received from the borrower!", Toast.LENGTH_LONG).show();
                         return;
                     }
                 } else if (book.getBorrowerUID().equals(uid) && book.getStatus().equals("Borrowed")) {
                     // Returning book to owner.
-                    book.returnBook(book.getOwnerUID());
+                    booksDB.returnToOwner(book);
                     Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was returned to the owner!", Toast.LENGTH_LONG).show();
                     return;
                 } else if (book.getRequesters().contains(uid) && book.getBorrowerUID().equals(book.getOwnerUID()) && book.getStatus().equals("Borrowed")) {
                     // Receiving a book from owner.
-                    book.confirm(uid);
+                    booksDB.confirmBorrow(book, uid);
                     Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was received from the owner!", Toast.LENGTH_LONG).show();
                     return;
                 }

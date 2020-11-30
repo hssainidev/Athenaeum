@@ -221,14 +221,13 @@ public class Book implements Serializable {
         this.setBorrowerUID(ownerUid);
     }
 
-    public void returnBook(String ownerUid) {
+    public void returnBook() {
         this.requesters.clear();
-        this.setBorrowerUID(ownerUid);
+        this.setStatus("Available");
     }
 
     public void receiveReturn() {
         this.setStatus("Available");
-        this.requesters.clear();
         this.setBorrowerUID(null);
     }
 
