@@ -19,12 +19,12 @@ public class ViewRequestActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_requests);
         final ListView list = findViewById(R.id.requester_list);
-        final BookDB booksDB=new BookDB();
+        final BookDB booksDB = new BookDB();
 
         ArrayList<String> arrayList = new ArrayList<String>();
         Intent i = getIntent();
-        final Book book=(Book) getIntent().getSerializableExtra("BOOK");
-        final String uid=getIntent().getExtras().getString("UID");
+        final Book book = (Book) getIntent().getSerializableExtra("BOOK");
+        final String uid = getIntent().getExtras().getString("UID");
 
 //        String isbn = intent.getStringExtra("book_ISBN");
 //        System.out.println(isbn);

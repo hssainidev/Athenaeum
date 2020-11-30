@@ -1,8 +1,11 @@
 package com.example.athenaeum;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * This is a class of book objects that have an ISBN, author, title, status, and owner,
@@ -18,6 +21,7 @@ public class Book implements Serializable {
     private File photo;
     private String ownerUID;
     private String borrowerUID;
+    private BookLocation location;
     private ArrayList<String> requesters;
 
 
@@ -172,6 +176,29 @@ public class Book implements Serializable {
     public void setBorrowerUID(String borrowerUID) {
         this.borrowerUID = borrowerUID;
     }
+
+    public void setLocation(Map<String, Object> location) {
+        if (location == null || location.size() == 0) {
+            this.location = null;
+        } else {
+            Map<String, Object> values = (Map<String, Object>) location.get("location");
+            if (values.size() == 2) {
+                double latitude = (double) values.get("latitude");
+                double longitude = (double) values.get("longitude");
+                this.location = new BookLocation(latitude, longitude);
+            } else {
+                this.location = null;
+            }
+        }
+    }
+
+    public void setLocation(double lat, double lon) {
+        this.location = new BookLocation(lat, lon);
+    }
+
+    //public void setLocation(double lat, double lon) { this.location = new BookLocation(lat, lon); }
+
+    public BookLocation getLocation() { return this.location; }
 
 
     public void request(String uid) {

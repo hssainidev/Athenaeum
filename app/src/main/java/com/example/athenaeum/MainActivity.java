@@ -2,6 +2,7 @@ package com.example.athenaeum;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,8 +20,14 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -49,10 +56,6 @@ public class MainActivity extends AppCompatActivity {
         for (String isbn : user_ISBNs) {
             bookDataList.add(booksDB.getBook(isbn));
         }
-
-//        for (Book book: bookDataList) {
-//            Log.d("book", book.getISBN());
-//        }
 
         bookAdapter = new CustomBookList(this, bookDataList);
 
@@ -167,28 +170,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        // Retrieve the information for the books and add it to the books list.
-//        final CollectionReference collectionReference = booksDB.getCollection();
-//
-//        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-//                    FirebaseFirestoreException error) {
-//                if (error != null) {
-//                    return;
-//                }
-//                bookDataList.clear();
-//                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-//                {
-//                    Log.d(TAG, String.valueOf(doc.getData().get("ISBN")));
-//                    String ISBN = (String) doc.getData().get("isbn");
-//                    String author = (String) doc.getData().get("author");
-//                    String title = (String) doc.getData().get("title");
-//                    bookDataList.add(new Book(ISBN, author, title)); // Adding the cities and provinces from FireStore
-//                }
-//                bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
-//            }
-//        });
     }
 }

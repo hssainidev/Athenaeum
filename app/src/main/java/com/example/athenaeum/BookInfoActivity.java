@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 
 // Can view all the details of a book
@@ -17,6 +19,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
     private String uid;
     private BookDB bookDB;
     private UserDB userDB;
+    private int requestCode = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +75,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
         request_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println((null==uid)?"Yes":"No");
+                System.out.println((null == uid) ? "Yes" : "No");
                 bookDB.requestBook(book, uid);
                 System.out.println("After going to Request function");
             }
@@ -102,9 +105,22 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
         location_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(BookInfoActivity.this, MapActivity.class));
+                Intent intent = new Intent(BookInfoActivity.this, MapActivity.class);
+                intent.putExtra("BOOK", book);
+                intent.putExtra("UID", uid);
+                startActivityForResult(intent, requestCode);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == this.requestCode) {
+            LatLng location = data.getExtras().getParcelable("LOCATION");
+            book.setLocation(location.latitude, location.longitude);
+            bookDB.addBook(book);
+        }
     }
 }
 

@@ -36,11 +36,9 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".MapActivity"
-            android:parentActivityName=".BookInfoActivity" />
+            android:name=".MapActivity" />
         <activity
-            android:name=".AddBookActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".AddBookActivity" />
         <activity
             android:name=".SearchActivity"
             android:parentActivityName=".MainActivity" />
@@ -51,8 +49,7 @@
             android:name=".ProfileActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".OwnedBookActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".OwnedBookActivity" />
         <activity
             android:name=".BorrowedBookActivity"
             android:parentActivityName=".MainActivity" />
