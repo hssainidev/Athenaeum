@@ -1,5 +1,6 @@
 package com.example.athenaeum;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * a connected profile object.
  */
 
-public class User {
+public class User implements Serializable {
     private ArrayList<String> books;
     private AthenaeumProfile profile;
 

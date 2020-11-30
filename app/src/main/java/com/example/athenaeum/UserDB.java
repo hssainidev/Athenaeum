@@ -12,6 +12,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,6 +70,28 @@ public class UserDB {
         books.remove(isbn);
         user.setBooks(books);
         addUser(user, uid);
+    }
+
+    public ArrayList<AthenaeumProfile> searchUsers(String query) {
+        query = query.toLowerCase();
+        ArrayList<AthenaeumProfile> profiles = new ArrayList<>();
+        Task<QuerySnapshot> userQuery = usersDB.collection("Users").get();
+        while (!userQuery.isComplete()) {
+        }
+        for(QueryDocumentSnapshot document : userQuery.getResult()) {
+            User user = document.toObject(User.class);
+            AthenaeumProfile profile = user.getProfile();
+            try {
+                Log.d("username", profile.getUsername());
+                if(profile.getUsername().toLowerCase().contains(query) || profile.getName().toLowerCase().contains(query)){
+                    profiles.add(profile);
+                }
+            } catch (Exception e) {
+                Log.d("Error", String.valueOf(e));
+            }
+        }
+
+        return profiles;
     }
 
 }
