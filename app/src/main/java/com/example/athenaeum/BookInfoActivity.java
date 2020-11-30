@@ -34,34 +34,45 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
         final boolean ownsBook = book.getOwnerUID().equals(uid);
 
         // connecting the variables to the TextView components of the layout
-        TextView title = (TextView) findViewById(R.id.book_title);
+        final EditText title = findViewById(R.id.book_title);
+        final EditText author = findViewById(R.id.book_info_author);
         final EditText bookDesc = (EditText) findViewById(R.id.description);
+        TextView isbn = findViewById(R.id.book_info_isbn);
         TextView status = (TextView) findViewById(R.id.status);
 
         // updating the variables to the corresponding values
         title.setText(book.getTitle());
+        author.setText(book.getAuthor());
         bookDesc.setText(book.getDescription());
         if (!ownsBook) {
-            bookDesc.setInputType(InputType.TYPE_NULL);
+            title.setFocusable(false);
+            author.setFocusable(false);
+            bookDesc.setFocusable(false);
         }
+        isbn.setText(book.getISBN());
         status.setText(book.getStatus());
 
         // Update the book description if it has changed
-        final Button update_description_button = (Button) findViewById(R.id.update_description);
+        final Button update_button = (Button) findViewById(R.id.update_book_info);
         if (!ownsBook) {
-            update_description_button.setVisibility(View.GONE);
+            update_button.setVisibility(View.GONE);
         } else {
-            update_description_button.setOnClickListener(new View.OnClickListener() {
+            update_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (!ownsBook) {
                         Toast.makeText(BookInfoActivity.this, "You do not have permission to update this book!", Toast.LENGTH_LONG).show();
                     }
-                    if (bookDesc.getText().toString().length() == 0) {
-                        bookDesc.setError("Must have a description");
+                    if (title.getText().toString().length() == 0) {
+                        title.setError("Must have a title!");
+                    } else if (author.getText().toString().length() == 0) {
+                        author.setError("Must have an author!");
                     } else {
+                        book.setTitle(title.getText().toString());
+                        book.setAuthor(author.getText().toString());
                         book.setDescription(bookDesc.getText().toString());
                         bookDB.addBook(book);
+                        setResult(1);
                     }
                 }
             });
@@ -80,9 +91,8 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                     }
                     bookDB.deleteBook(book.getISBN());
                     userDB.deleteBookFromUser(uid, book.getISBN());
-                    Intent intent = new Intent(BookInfoActivity.this, MainActivity.class);
-                    intent.putExtra("UID", uid);
-                    startActivity(intent);
+                    setResult(1);
+                    finish();
                 }
             });
         }

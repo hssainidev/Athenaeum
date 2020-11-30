@@ -30,12 +30,12 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="46dp"
+                android:layout_marginTop="25dp"
                 android:layout_marginEnd="16dp"
-                android:text="Description"
+                android:hint="Description (Optional)"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/book_title" />
+                app:layout_constraintTop_toBottomOf="@+id/book_info_isbn" />
 
             <TextView
                 android:id="@+id/status"
@@ -46,14 +46,16 @@
                 android:text="Status"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/update_description" />
+                app:layout_constraintTop_toBottomOf="@+id/update_book_info" />
 
             <Button
-                android:id="@+id/update_description"
+                android:id="@+id/update_book_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:text="Update Description"
+                android:background="@color/colorButton"
+                android:textColor="#FFFFFF"
+                android:text="Update Information"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/description"
@@ -66,9 +68,11 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="4dp"
+                android:background="@color/colorButton"
+                android:textColor="#FFFFFF"
                 android:text="@string/location"
-                android:textSize="24sp"
                 android:visibility="visible"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/delete_book"
@@ -80,22 +84,55 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
+                android:background="@color/colorButton"
+                android:textColor="#FFFFFF"
                 android:text="Delete Book"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/status"
                 tools:visibility="visible" />
 
-            <TextView
+            <EditText
                 android:id="@+id/book_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="80dp"
                 android:layout_marginEnd="16dp"
-                android:text="Title"
+                android:hint="Title"
                 android:textSize="36sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/book_author_intro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="by: "
+                android:textSize="25sp"
+                app:layout_constraintEnd_toStartOf="@id/book_info_author"
+                app:layout_constraintTop_toBottomOf="@+id/book_title" />
+
+            <EditText
+                android:id="@+id/book_info_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="300dp"
+                android:hint="Author"
+                android:textSize="25sp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toEndOf="@+id/book_author_intro"
+                app:layout_constraintTop_toBottomOf="@+id/book_title" />
+
+            <TextView
+                android:id="@+id/book_info_isbn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="ISBN"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@+id/book_info_author" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
@@ -104,8 +141,11 @@
         android:id="@+id/request"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginHorizontal="16dp"
         android:text="Request"
+        android:background="@color/colorButton"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/view_requests"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -113,7 +153,9 @@
         android:id="@+id/view_requests"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:background="@color/colorButton"
+        android:textColor="#FFFFFF"
         android:layout_marginBottom="4dp"
         android:text="@string/view_requests"
         android:textSize="18sp"
