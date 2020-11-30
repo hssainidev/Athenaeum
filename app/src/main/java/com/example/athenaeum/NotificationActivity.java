@@ -1,9 +1,28 @@
+/*
+ * NotificationActivity
+ *
+ * November 30 2020
+ *
+ * Copyright 2020 Natalie Iwaniuk, Harpreet Saini, Jack Gray, Jorge Marquez Peralta, Ramana Vasanthan, Sree Nidhi Thanneeru
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 package com.example.athenaeum;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.LinearLayout;
-import android.widget.TextClock;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -19,10 +38,15 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * This Activity looks at the user's books and displays notifications
+ * based on how many of their books are requested and how many books
+ * they've requested are accepted.
+ */
 public class NotificationActivity extends AppCompatActivity {
 
     private static final String TAG = "Hello! ";
-    LinearLayout linearLayout;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -30,6 +54,7 @@ public class NotificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notification);
         linearLayout = findViewById(R.id.notification_activity);
 
+        // Retrieve the uid and initialize the book lists and book and user databases.
         final String uid = getIntent().getExtras().getString("UID");
         final ArrayList<String> books = (ArrayList<String>) getIntent().getExtras().getSerializable("ownedBooks");
         final ArrayList<Book> acceptedBooks = (ArrayList<Book>) getIntent().getExtras().getSerializable("acceptedBooks");
@@ -37,6 +62,7 @@ public class NotificationActivity extends AppCompatActivity {
         final BookDB booksDB = new BookDB();
         final User currentUser = users.getUser(uid);
 
+        // Look through all of the user's own books.
         for (String book : books) {
             final DocumentReference documentReference = FirebaseFirestore.getInstance().collection("Books").document(book);
             documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -49,13 +75,16 @@ public class NotificationActivity extends AppCompatActivity {
                     if (snapshot != null && snapshot.exists()) {
                         Map<String, Object> data = snapshot.getData();
 
+                        // Check if a book is requested.
                         if (Objects.equals(data.get("status"), "Requested")) {
                             ArrayList<String> requesters = (ArrayList<String>) data.get("requesters");
                             String borrowerUID = (String) data.get("borrowerUID");
                             String ownerUID = (String) data.get("ownerUID");
                             User borrower = null;
                             String title = (String) data.get("title");
+
                             if (borrowerUID != null && !borrowerUID.equals(ownerUID)) {
+                                // If the borrowerUID exists and is not the same as the ownerUID, then add a notification with that username.
                                 borrower = users.getUser(borrowerUID);
                                 User owner = users.getUser(ownerUID);
                                 TextView requestedString = new TextView(NotificationActivity.this);
@@ -64,6 +93,7 @@ public class NotificationActivity extends AppCompatActivity {
                                     linearLayout.addView(requestedString);
                                 }
                             } else if (requesters.size() > 0) {
+                                // Otherwise, if there's any requesters, then add their username.
                                 for (String requester : requesters) {
                                     if (requester == borrowerUID) continue;
                                     TextView requestedString = new TextView(NotificationActivity.this);
@@ -81,6 +111,7 @@ public class NotificationActivity extends AppCompatActivity {
                 }
             });
         }
+        // Go through the accepted books of the user and create notifications for those as well.
         for (Book book: acceptedBooks) {
             User owner = users.getUser(book.getOwnerUID());
             String title = book.getTitle();

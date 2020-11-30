@@ -1,3 +1,29 @@
+/*
+ * SignupActivity
+ *
+ * November 30 2020
+ *
+ * Copyright 2020 Natalie Iwaniuk, Harpreet Saini, Jack Gray, Jorge Marquez Peralta, Ramana Vasanthan, Sree Nidhi Thanneeru
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ * Referenced for User Authentication
+ * https://firebase.google.com/docs/auth
+ * by Google Developers
+ * Published November 17, 2020
+ * Licensed under the Apache 2.0 license.
+ */
+
 package com.example.athenaeum;
 
 import androidx.annotation.NonNull;
@@ -11,22 +37,24 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
+/**
+ * This Activity allows users to sign up for a new account.
+ * It implements client-side validation for the form, and implements server-side validation of the username being unique.
+ */
 public class SignupActivity extends AppCompatActivity {
-    UserDB userDB;
-    EditText pass;
-    EditText email;
-    EditText username;
-    UserAuth auth;
-    EditText passConfirm;
-    public Boolean verify;
+    private UserDB userDB;
+    private EditText pass;
+    private EditText email;
+    private EditText username;
+    private UserAuth auth;
+    private EditText passConfirm;
+    private Boolean verify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
