@@ -94,4 +94,22 @@ public class UserDB {
         return profiles;
     }
 
+    public boolean doesUsernameExist(String username) {
+        Task<QuerySnapshot> userQuery = usersDB.collection("Users").get();
+        while (!userQuery.isComplete()) {
+        }
+        for(QueryDocumentSnapshot document : userQuery.getResult()) {
+            User user = document.toObject(User.class);
+            AthenaeumProfile profile = user.getProfile();
+            try {
+                if (profile.getUsername().equals(username)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                Log.d("Error", String.valueOf(e));
+            }
+        }
+        return false;
+    }
+
 }
