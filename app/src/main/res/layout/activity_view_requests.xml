@@ -10,7 +10,7 @@
         android:id="@+id/requester_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/accept">
+        android:layout_below="@id/decline">
 
     </ListView>
 
@@ -20,15 +20,21 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:text="Accept"
-        android:layout_below="@+id/decline"
         android:visibility="visible"
-        tools:visibility="visible" />
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="10dp"
+        android:background="@color/colorButton"
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/decline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text="Decline" />
+        android:text="Decline"
+        android:layout_marginHorizontal="10dp"
+        android:background="@color/colorButton"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/accept" />
 
 </RelativeLayout>

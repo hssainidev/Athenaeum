@@ -19,6 +19,9 @@
             android:id="@+id/menu_borrowed"
             android:title="Borrowed Books" />
         <item
+            android:id="@+id/menu_accepted"
+            android:title="Accepted Requests" />
+        <item
             android:id="@+id/menu_scan"
             android:title="Scan Book" />
         <item

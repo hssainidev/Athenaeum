@@ -61,6 +61,9 @@
         <activity
             android:name=".RequestedBookActivity"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".AcceptedBookActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

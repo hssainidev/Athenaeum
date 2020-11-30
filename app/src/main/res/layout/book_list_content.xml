@@ -1,40 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/book_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:paddingTop="5dp"
         android:text="Title"
-        android:layout_marginLeft="10dp"
-        android:textSize="35sp"></TextView>
+        android:textSize="35sp"
+        app:layout_constraintBottom_toTopOf="@+id/book_author"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"></TextView>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/book_author"
-        android:textSize="25sp"
-        android:layout_marginLeft="20dp"
-        android:text="Author">
-    </TextView>
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="9dp"
+        android:text="Author"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/book_isbn"
+        app:layout_constraintStart_toStartOf="@+id/book_title"
+        app:layout_constraintTop_toBottomOf="@+id/book_title"></TextView>
+
+    <TextView
         android:id="@+id/book_isbn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ISBN"
         android:textSize="15sp"
-        android:layout_marginLeft="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/book_author"
+        app:layout_constraintTop_toBottomOf="@+id/book_author"></TextView>
+
+    <TextView
+        android:id="@+id/book_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textSize="15sp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.8"></TextView>
+
+    <TextView
+        android:id="@+id/book_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="ISBN">
-    </TextView>
+        android:text="Owner"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/book_isbn"
+        app:layout_constraintTop_toBottomOf="@+id/book_isbn"></TextView>
+
+    <TextView
+        android:id="@+id/book_borrower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="Borrower"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/book_status"
+        android:visibility="gone"></TextView>
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 

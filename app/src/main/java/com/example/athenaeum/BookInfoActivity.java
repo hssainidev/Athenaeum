@@ -40,7 +40,6 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
     private String uid;
     private BookDB bookDB;
     private UserDB userDB;
-    private int requestCode = 1;
     private ImageView imageView;
     private FirebaseStorage storage;
     private StorageReference storageReference;
@@ -101,6 +100,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                 public void onClick(View view) {
                     if (!ownsBook) {
                         Toast.makeText(BookInfoActivity.this, "You do not have permission to update this book!", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     if (title.getText().toString().length() == 0) {
                         title.setError("Must have a title!");
@@ -128,6 +128,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                 public void onClick(View view) {
                     if (!ownsBook) {
                         Toast.makeText(BookInfoActivity.this, "You do not have permission to delete this book!", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     bookDB.deleteBook(book.getISBN());
                     userDB.deleteBookFromUser(uid, book.getISBN());
@@ -137,7 +138,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
             });
         }
 
-        boolean requestedByUser = (book.getStatus().equals("Requested") && book.getRequesters().contains(uid));
+        final boolean requestedByUser = (book.getStatus().equals("Requested") && book.getRequesters().contains(uid));
         final Button request_button = (Button) findViewById(R.id.request);
         if (ownsBook || (!book.getStatus().equals("Available") && (!book.getStatus().equals("Requested") || requestedByUser))) {
             request_button.setVisibility(View.GONE);
@@ -147,8 +148,10 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                 public void onClick(View v) {
                     if (ownsBook) {
                         Toast.makeText(BookInfoActivity.this, "You cannot request a book that you own!", Toast.LENGTH_LONG).show();
-                    } else if (!book.getStatus().equals("Available")) {
+                        return;
+                    } else if ((!book.getStatus().equals("Available") && (!book.getStatus().equals("Requested") || requestedByUser))) {
                         Toast.makeText(BookInfoActivity.this, "You cannot request this book right now!", Toast.LENGTH_LONG).show();
+                        return;
                     }
                     System.out.println((null == uid) ? "Yes" : "No");
                     bookDB.requestBook(book, uid);
@@ -163,7 +166,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
         // View requests button for when the user is the owner of the book
         // and has received at least one request
         final Button viewRequests_button = (Button) findViewById(R.id.view_requests);
-        if (!ownsBook || book.getRequesters().size() == 0) {
+        if (!ownsBook || book.getRequesters().size() == 0 || !book.getStatus().equals("Requested")) {
             viewRequests_button.setVisibility(View.GONE);
         } else {
             viewRequests_button.setOnClickListener(new View.OnClickListener() {
@@ -177,7 +180,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                     Intent i = new Intent(BookInfoActivity.this, ViewRequestActivity.class);
                     i.putExtra("BOOK", book);
                     i.putExtra("UID", uid);
-                    startActivity(i);
+                    startActivityForResult(i, 2);
                 }
             });
         }
@@ -236,7 +239,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                     Intent intent = new Intent(BookInfoActivity.this, MapActivity.class);
                     intent.putExtra("BOOK", book);
                     intent.putExtra("UID", uid);
-                    startActivityForResult(intent, requestCode);
+                    startActivityForResult(intent, 1);
                 }
             });
         }
@@ -270,10 +273,19 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (resultCode == this.requestCode) {
+        } else if (resultCode == 1) {
             LatLng location = data.getExtras().getParcelable("LOCATION");
             book.setLocation(location.latitude, location.longitude);
             bookDB.addBook(book);
+        } else if (resultCode == 2) {
+            final TextView status = (TextView) findViewById(R.id.status);
+            // updating the variables to the corresponding values
+            book = bookDB.getBook(book.getISBN());
+            status.setText(book.getStatus());
+            final Button viewRequests_button = (Button) findViewById(R.id.view_requests);
+            if (book.getRequesters().size() == 0 || !book.getStatus().equals("Requested")) {
+                viewRequests_button.setVisibility(View.GONE);
+            }
         }
     }
 }

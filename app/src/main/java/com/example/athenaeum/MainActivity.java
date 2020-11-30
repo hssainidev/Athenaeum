@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent = new Intent(MainActivity.this, OwnedBookActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("ownedBooks", currentUser.getBooks());
+                            bundle.putSerializable("UID", uid);
                             bundle.putSerializable("profile", currentUser.getProfile());
                             intent.putExtras(bundle);
                             startActivity(intent);
@@ -174,17 +175,22 @@ public class MainActivity extends AppCompatActivity {
                             bundle.putSerializable("UID", uid);
                             intent.putExtras(bundle);
                             startActivity(intent);
-                        }
-                        else if (menuItem.getItemId() == R.id.menu_borrowed) {
-                            Intent intent=new Intent(MainActivity.this, BorrowedBookActivity.class);
+                        } else if (menuItem.getItemId() == R.id.menu_borrowed) {
+                            Intent intent = new Intent(MainActivity.this, BorrowedBookActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("UID", uid);
                             bundle.putSerializable("profile", currentUser.getProfile());
                             intent.putExtras(bundle);
                             startActivity(intent);
-                        }
-                        else if (menuItem.getItemId() == R.id.menu_requested) {
-                            Intent intent=new Intent(MainActivity.this, RequestedBookActivity.class);
+                        } else if (menuItem.getItemId() == R.id.menu_requested) {
+                            Intent intent = new Intent(MainActivity.this, RequestedBookActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("UID", uid);
+                            bundle.putSerializable("profile", currentUser.getProfile());
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        } else if (menuItem.getItemId() == R.id.menu_accepted) {
+                            Intent intent = new Intent(MainActivity.this, AcceptedBookActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("UID", uid);
                             bundle.putSerializable("profile", currentUser.getProfile());
