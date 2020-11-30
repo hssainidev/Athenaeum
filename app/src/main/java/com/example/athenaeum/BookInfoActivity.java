@@ -73,6 +73,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                         book.setDescription(bookDesc.getText().toString());
                         bookDB.addBook(book);
                         setResult(1);
+                        Toast.makeText(BookInfoActivity.this, "Book successfully updated!", Toast.LENGTH_LONG).show();
                     }
                 }
             });
