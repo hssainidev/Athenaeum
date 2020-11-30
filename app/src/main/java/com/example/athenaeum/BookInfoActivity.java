@@ -140,7 +140,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
         boolean requestedByUser = (book.getStatus().equals("Requested") && book.getRequesters().contains(uid));
         final Button request_button = (Button) findViewById(R.id.request);
         if (ownsBook || (!book.getStatus().equals("Available") && (!book.getStatus().equals("Requested") || requestedByUser))) {
-            request_button.setVisibility(View.GONE);
+//            request_button.setVisibility(View.GONE);
         } else {
             request_button.setOnClickListener(new View.OnClickListener() {
                 @Override

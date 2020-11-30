@@ -21,10 +21,13 @@ import java.util.Objects;
 public class NotificationActivity extends AppCompatActivity {
 
     private static final String TAG = "Hello! ";
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+        setContentView(R.layout.activity_notification);
+        linearLayout=findViewById(R.id.notification_activity);
 
         final String uid = getIntent().getExtras().getString("UID");
         final ArrayList<String> books = (ArrayList<String>) getIntent().getExtras().getSerializable("ownedBooks");
@@ -54,12 +57,12 @@ public class NotificationActivity extends AppCompatActivity {
                             String title = (String) data.get("title");
                             String ownerUID = (String) data.get("ownerUID");
                             User owner = users.getUser(ownerUID);
-                            LinearLayout linearLayout = findViewById(R.id.notification_activity);
-
                             TextView requestedString = new TextView(NotificationActivity.this);
                             requestedString.setText(String.format("%s has requested %s", borrower, title));
 //                            linearLayout.setBackgroundColor(Color.TRANSPARENT);
-                            linearLayout.addView(requestedString);
+                            if (borrower!=null) {
+                                linearLayout.addView(requestedString);
+                            }
 
 
                             Log.d(TAG, "Current data: " + snapshot.getData());
