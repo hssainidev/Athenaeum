@@ -1,5 +1,6 @@
 package com.example.athenaeum;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -152,6 +153,14 @@ public class BookDB {
     }
     public void confirmReturn(Book book) {
         book.receiveReturn();
+        this.addBook(book);
+    }
+    public void addPhoto(Book book) {
+        book.setPhoto();
+        this.addBook(book);
+    }
+    public void removePhoto(Book book) {
+        book.removePhoto();
         this.addBook(book);
     }
 }

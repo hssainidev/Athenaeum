@@ -56,8 +56,20 @@ public class AddBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String authorString = author.getText().toString();
+                if (authorString.length() == 0) {
+                    author.setError("You must enter an author name.");
+                    return;
+                }
                 String ISBNString = ISBN.getText().toString();
+                if (ISBNString.length() == 0) {
+                    author.setError("You must enter an ISBN.");
+                    return;
+                }
                 String titleString = title.getText().toString();
+                if (titleString.length() == 0) {
+                    author.setError("You must enter a title.");
+                    return;
+                }
                 String descriptionString = description.getText().toString();
 
                 Book newBook = new Book(ISBNString, authorString, titleString);
@@ -71,9 +83,8 @@ public class AddBookActivity extends AppCompatActivity {
 
                 userDB.addUser(user, uid);
                 bookDB.addBook(newBook);
-                Intent intent = new Intent(AddBookActivity.this, MainActivity.class);
-                intent.putExtra("UID", uid);
-                startActivity(intent);
+                setResult(1);
+                finish();
             }
         });
     }

@@ -48,6 +48,9 @@
             android:name=".OwnedBookActivity"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name=".NotificationActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".BorrowedBookActivity"
             android:parentActivityName=".MainActivity" />
         <activity
