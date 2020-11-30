@@ -1,12 +1,15 @@
 package com.example.athenaeum;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.Serializable;
@@ -17,6 +20,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
     private String uid;
     private BookDB bookDB;
     private UserDB userDB;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
         request_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println((null==uid)?"Yes":"No");
+                System.out.println((null == uid) ? "Yes" : "No");
                 bookDB.requestBook(book, uid);
                 System.out.println("After going to Request function");
             }
@@ -97,6 +101,17 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                 startActivity(i);
             }
         });
+        imageView = findViewById(R.id.image);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 9);
+
+            }
+        });
 
 
 //        final Button scan_button = (Button) findViewById(R.id.scan);
@@ -115,6 +130,18 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
 //            scan_button.setVisibility(Button.GONE);
 //            location_button.setVisibility(Button.GONE);
 //        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 9 && resultCode == RESULT_OK && data != null) {
+
+            //Get selected image uri here
+            Uri imageUri = data.getData();
+
+            imageView.setImageURI(imageUri);
+        }
     }
 }
 
