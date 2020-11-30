@@ -52,20 +52,25 @@ public class NotificationActivity extends AppCompatActivity {
                         if (Objects.equals(data.get("status"), "Requested")) {
                             ArrayList<String> requesters = (ArrayList<String>) data.get("requesters");
                             String borrowerUID = (String) data.get("borrowerUID");
-                            User borrower = null;
-                            if (borrowerUID != null) {
-                                borrower = users.getUser(borrowerUID);
-                            }
-                            String title = (String) data.get("title");
                             String ownerUID = (String) data.get("ownerUID");
-                            User owner = users.getUser(ownerUID);
-                            TextView requestedString = new TextView(NotificationActivity.this);
-                            requestedString.setText(String.format("%s has requested %s", borrower.getProfile().getUsername(), title));
-                            if (borrower != null) {
-                                linearLayout.addView(requestedString);
+                            User borrower = null;
+                            String title = (String) data.get("title");
+                            if (borrowerUID != null && !borrowerUID.equals(ownerUID)) {
+                                borrower = users.getUser(borrowerUID);
+                                User owner = users.getUser(ownerUID);
+                                TextView requestedString = new TextView(NotificationActivity.this);
+                                requestedString.setText(String.format("%s has requested %s", borrower.getProfile().getUsername(), title));
+                                if (borrower != null) {
+                                    linearLayout.addView(requestedString);
+                                }
+                            } else if (requesters.size() > 0) {
+                                for (String requester : requesters) {
+                                    if (requester == borrowerUID) continue;
+                                    TextView requestedString = new TextView(NotificationActivity.this);
+                                    requestedString.setText(String.format("%s has requested %s", users.getUser(requester).getProfile().getUsername(), title));
+                                    linearLayout.addView(requestedString);
+                                }
                             }
-
-
                             Log.d(TAG, "Current data: " + snapshot.getData());
 
                         }
