@@ -1,6 +1,9 @@
 package com.example.athenaeum;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,5 +35,15 @@ public class BorrowedBookActivity extends AppCompatActivity {
         bookAdapter = new CustomBookList(this, bookDataList);
         bookList.setAdapter(bookAdapter);
 
+        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Book book = (Book) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(BorrowedBookActivity.this, BookInfoActivity.class);
+                intent.putExtra("BOOK", book);
+                intent.putExtra("UID", uid);
+                startActivity(intent);
+            }
+        });
     }
 }

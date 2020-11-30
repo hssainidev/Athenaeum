@@ -125,22 +125,19 @@ public class AddBookActivity extends AppCompatActivity {
                         description.setText("");
                         String authorString = parseString(response, "authors");
                         if (authorString == null) {
-                            Toast.makeText(AddBookActivity.this, "Book info could not be found.", Toast.LENGTH_LONG).show();
-                            return;
+                            Toast.makeText(AddBookActivity.this, "Some book info could not be found.", Toast.LENGTH_LONG).show();
                         } else {
                             author.setText(authorString);
                         }
                         String titleString = parseString(response, "title");
                         if (titleString == null) {
-                            Toast.makeText(AddBookActivity.this, "Book info could not be found.", Toast.LENGTH_LONG).show();
-                            return;
+                            Toast.makeText(AddBookActivity.this, "Some book info could not be found.", Toast.LENGTH_LONG).show();
                         } else {
                             title.setText(titleString);
                         }
                         String descriptionString = parseString(response, "description");
                         if (descriptionString == null) {
-                            Toast.makeText(AddBookActivity.this, "Book info could not be found.", Toast.LENGTH_LONG).show();
-                            return;
+                            Toast.makeText(AddBookActivity.this, "Some book info could not be found.", Toast.LENGTH_LONG).show();
                         } else {
                             description.setText(descriptionString);
                         }
