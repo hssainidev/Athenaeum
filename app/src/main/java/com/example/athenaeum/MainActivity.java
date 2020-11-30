@@ -270,6 +270,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This function retrieves the result from various activities and updates the list.
+     * @param requestCode Contains the request code sent to the other activity.
+     * @param resultCode Contains the result code from the other activity, if applicable.
+     * @param data Contains the data from the other activity.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
