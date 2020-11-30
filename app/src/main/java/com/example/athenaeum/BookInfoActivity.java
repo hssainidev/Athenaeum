@@ -158,6 +158,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
                     System.out.println("After going to Request function");
                     status.setText(book.getStatus());
                     request_button.setVisibility(View.GONE);
+                    setResult(1);
                     Toast.makeText(BookInfoActivity.this, "Request sent!", Toast.LENGTH_LONG).show();
                 }
             });
@@ -194,37 +195,39 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
         else {
             imageView.setImageDrawable(null);
         }
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!book.getPhoto()) {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    intent.setType("image/*");
-                    startActivityForResult(intent, 9);
-                }
-                else {
-                    AlertDialog.Builder builder=new AlertDialog.Builder(BookInfoActivity.this);
-                    builder.setMessage("Delete Photo?")
-                            .setTitle("Photo")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    bookDB.removePhoto(book);
-                                    imageView.setImageDrawable(null);
-                                }
-                            })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
+        if (ownsBook) {
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!book.getPhoto()) {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        intent.setType("image/*");
+                        startActivityForResult(intent, 9);
+                    }
+                    else {
+                        AlertDialog.Builder builder=new AlertDialog.Builder(BookInfoActivity.this);
+                        builder.setMessage("Delete Photo?")
+                                .setTitle("Photo")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        bookDB.removePhoto(book);
+                                        imageView.setImageDrawable(null);
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                                }
-                            });
-                    builder.create().show();
-                }
+                                    }
+                                });
+                        builder.create().show();
+                    }
 
-            }
-        });
+                }
+            });
+        }
 
         final Button location_button = (Button) findViewById(R.id.location);
         // Boolean for whether a book is accepted and currently in the owner's possession for them to set a location.

@@ -65,8 +65,9 @@ public class BookDB {
         for (QueryDocumentSnapshot document : bookQuery.getResult()) {
             Book book = document.toObject(Book.class);
             try {
+                if (book.getStatus().equals("Accepted") || book.getStatus().equals("Borrowed")) { continue; }
                 Log.d("book", book.getDescription());
-                String fullDescription = book.getDescription()+book.getAuthor()+book.getISBN()+book.getTitle();
+                String fullDescription = book.getDescription() + book.getAuthor() + book.getISBN()+book.getTitle();
                 if (fullDescription.toLowerCase().contains(keyword1.toLowerCase())) {
                     bookSearch.add(document.toObject(Book.class));
                 }
