@@ -106,8 +106,7 @@ public class BookDB {
             Book book = document.toObject(Book.class);
             try {
                 Log.d("book", book.getDescription());
-                boolean borrowConfirm = (book.getStatus().equals("Borrowed") && book.getBorrowerUID().equals(book.getOwnerUID()));
-                if (book.getRequesters().contains(uid1) && (book.getStatus().equals("Requested") || borrowConfirm || book.getStatus().equals("Accepted"))) {
+                if (book.getRequesters().contains(uid1) && book.getStatus().equals("Requested")) {
                     bookRequest.add(document.toObject(Book.class));
                 }
             } catch (Exception e) {
@@ -115,6 +114,27 @@ public class BookDB {
             }
         }
         return bookRequest;
+    }
+
+    public ArrayList<Book> getAcceptedBooks(String uid) {
+        final ArrayList<Book> bookAccept = new ArrayList<>();
+        final String uid1=uid;
+        Task<QuerySnapshot> bookQuery = booksDB.collection("Books").get();
+        while (!bookQuery.isComplete()) {
+        }
+        for (QueryDocumentSnapshot document : bookQuery.getResult()) {
+            Book book = document.toObject(Book.class);
+            try {
+                Log.d("book", book.getDescription());
+                boolean borrowConfirm = (book.getStatus().equals("Borrowed") && book.getBorrowerUID().equals(book.getOwnerUID()));
+                if (book.getRequesters().contains(uid1) && (borrowConfirm || book.getStatus().equals("Accepted"))) {
+                    bookAccept.add(document.toObject(Book.class));
+                }
+            } catch (Exception e) {
+                Log.d("Error", "failed getting accepted books");
+            }
+        }
+        return bookAccept;
     }
 
     public Book getBook(String ISBN) {
@@ -142,6 +162,13 @@ public class BookDB {
     }
     public void acceptRequest(Book book, String uid) {
         book.accept(uid);
+        this.addBook(book);
+    }
+    public void declineRequest(Book book, String uid) {
+        book.removeRequester(uid);
+        if (book.getRequesters().size() == 0) {
+            book.setStatus("Available");
+        }
         this.addBook(book);
     }
     public void confirmBorrow(Book book, String uid) {

@@ -1,5 +1,6 @@
 package com.example.athenaeum;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,9 +19,10 @@ public class OwnedBookActivity extends AppCompatActivity {
     ListView bookList;
     Spinner mySpinner;
     ArrayAdapter<Book> bookAdapter;
-    String[] status = {"All", "Available", "Requested", "Borrowed"};
+    String[] status = {"All", "Available", "Accepted", "Requested", "Borrowed"};
     final BookDB booksDB = new BookDB();
     ArrayList<Book> bookDataList = new ArrayList<>();
+    String uid;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -29,6 +31,7 @@ public class OwnedBookActivity extends AppCompatActivity {
 
 
         AthenaeumProfile profile = (AthenaeumProfile) getIntent().getExtras().getSerializable("profile");
+        uid = (String) getIntent().getExtras().getSerializable("UID");
         //noinspection unchecked
         final ArrayList<String> books = (ArrayList<String>) getIntent().getExtras().getSerializable("ownedBooks");
 
@@ -76,5 +79,30 @@ public class OwnedBookActivity extends AppCompatActivity {
                 bookList.setAdapter(bookAdapter);
             }
         });
+
+        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Book book = (Book) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(OwnedBookActivity.this, BookInfoActivity.class);
+                intent.putExtra("BOOK", book);
+                intent.putExtra("UID", uid);
+                startActivityForResult(intent, 1);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1) {
+            UserDB users = new UserDB();
+            bookDataList.clear();
+            ArrayList<String> user_ISBNs = users.getUser(uid).getBooks();
+            for (String isbn : user_ISBNs) {
+                bookDataList.add(booksDB.getBook(isbn));
+            }
+            bookAdapter.notifyDataSetChanged();
+        }
     }
 }
