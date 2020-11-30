@@ -53,7 +53,7 @@ public class CustomProfileList extends ArrayAdapter<AthenaeumProfile> {
         this.context = context;
     }
 
-    //manually sets up view for displaying profiles
+    // Manually sets up view for displaying profiles
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

@@ -1,5 +1,5 @@
 /*
- * UserDB
+ * AthenaeumProfile
  *
  * November 30 2020
  *
@@ -65,7 +65,7 @@ public class AthenaeumProfile implements Serializable {
     }
 
     /**
-     * This constructor is required for firestore.
+     * This constructor is required for Firestore.
      */
     public AthenaeumProfile() {
     }
