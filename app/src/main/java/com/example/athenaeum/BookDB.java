@@ -16,9 +16,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import io.grpc.Context;
 
 import static android.content.ContentValues.TAG;
 
@@ -162,6 +166,12 @@ public class BookDB {
     }
     public void removePhoto(Book book) {
         book.removePhoto();
+        FirebaseStorage storage= FirebaseStorage.getInstance();
+        StorageReference storageReference=storage.getReference();
+        StorageReference ref=storageReference.child(book.getISBN()+".jpg");
+        Task<Void> task=ref.delete();
+        while (!task.isComplete()) {}
+
         this.addBook(book);
     }
 }
