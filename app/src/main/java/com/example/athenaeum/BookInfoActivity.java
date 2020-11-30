@@ -1,7 +1,9 @@
 package com.example.athenaeum;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,14 +18,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 
 // Can view all the details of a book
@@ -165,17 +172,43 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
             });
         }
         imageView = findViewById(R.id.image);
-        if (book.getPhoto()!=null) {
-            imageView.setImageURI(Uri.parse(book.getPhoto().toString()));
+        if (book.getPhoto()) {
+            StorageReference ref=storageReference.child(book.getISBN()+".jpg");
+            final long ONE_MEGABYTE=1024*1024*5;
+            Glide.with(this).load(ref).into(imageView);
             System.out.println("Reached"+book.getPhoto());
+        }
+        else {
+            imageView.setImageDrawable(null);
         }
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent, 9);
+                if (!book.getPhoto()) {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, 9);
+                }
+                else {
+                    AlertDialog.Builder builder=new AlertDialog.Builder(BookInfoActivity.this);
+                    builder.setMessage("Delete Photo?")
+                            .setTitle("Photo")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    bookDB.removePhoto(book);
+                                    imageView.setImageDrawable(null);
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            });
+                    builder.create().show();
+                }
 
             }
         });
@@ -216,7 +249,7 @@ public class BookInfoActivity extends AppCompatActivity implements Serializable 
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 imageView.setImageBitmap(bitmap);
-                StorageReference ref=storageReference.child(book.getISBN());
+                StorageReference ref=storageReference.child(book.getISBN()+".jpg");
                 ref.putFile(imageUri)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
