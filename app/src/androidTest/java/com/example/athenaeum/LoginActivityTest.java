@@ -55,7 +55,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkLogin(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
@@ -71,7 +71,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkSwitchToSignup(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         solo.clickOnButton("SIGN UP"); //Select SIGN UP Button
         // Asserts that the activity is now SignupActivity, otherwise display "did not switch activity"
@@ -83,7 +83,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkSwitchToAddBook(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
@@ -102,7 +102,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkSwitchToSearch(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
@@ -121,7 +121,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkSwitchToBook(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
@@ -140,7 +140,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkNavMenu(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
@@ -165,7 +165,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkSwitchToProfile(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
@@ -182,11 +182,32 @@ public class LoginActivityTest{
     }
 
     /**
+     * Ensure that the activity switches correctly to Notifications activity
+     */
+    @Test
+    public void checkSwitchToNotifications(){
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
+        solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
+        //Get view for EditText and enter a valid email
+        solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
+        //Get view for EditText and enter a valid password
+        solo.enterText((EditText) solo.getView(R.id.loginPassword), "tester");
+        solo.clickOnButton("LOGIN"); //Select LOGIN Button
+        // Asserts that the activity is now MainActivity, otherwise display "did not switch activity"
+        solo.assertCurrentActivity("Did not switch activity.", MainActivity.class);
+        solo.clickOnImage(0);
+        assertTrue(solo.waitForText("Notifications", 1, 2000));
+        solo.clickOnText("Notifications");
+        // Asserts that the activity is now NotificationActivity, otherwise display "did not switch activity"
+        solo.assertCurrentActivity("Did not switch activity.", NotificationActivity.class);
+    }
+
+    /**
      * Ensure that the activity switches correctly to Owned Books activity
      */
     @Test
     public void checkSwitchToOwned(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
@@ -207,7 +228,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkSwitchToRequested(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
@@ -228,7 +249,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkSwitchToBorrowed(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
@@ -249,7 +270,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkSwitchToAccepted(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
@@ -270,7 +291,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkSwitchToScan(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
@@ -291,7 +312,7 @@ public class LoginActivityTest{
      */
     @Test
     public void checkLogout(){
-        // Asserts that the current activity is the LoginActivity. Otherwise, show “Wrong Activity”
+        // Asserts that the current activity is the LoginActivity. Otherwise, show "Wrong Activity"
         solo.assertCurrentActivity("Wrong Activity", LoginActivity.class);
         //Get view for EditText and enter a valid email
         solo.enterText((EditText) solo.getView(R.id.loginEmail), "testing@gmail.com");
