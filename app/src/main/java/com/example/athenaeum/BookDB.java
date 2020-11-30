@@ -1,5 +1,6 @@
 package com.example.athenaeum;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -101,7 +102,8 @@ public class BookDB {
             Book book = document.toObject(Book.class);
             try {
                 Log.d("book", book.getDescription());
-                if (book.getRequesters().contains(uid1) && book.getStatus().equals("Requested")) {
+                boolean borrowConfirm = (book.getStatus().equals("Borrowed") && book.getBorrowerUID().equals(book.getOwnerUID()));
+                if (book.getRequesters().contains(uid1) && (book.getStatus().equals("Requested") || borrowConfirm || book.getStatus().equals("Accepted"))) {
                     bookRequest.add(document.toObject(Book.class));
                 }
             } catch (Exception e) {
@@ -152,6 +154,14 @@ public class BookDB {
     }
     public void confirmReturn(Book book) {
         book.receiveReturn();
+        this.addBook(book);
+    }
+    public void addPhoto(Book book) {
+        book.setPhoto();
+        this.addBook(book);
+    }
+    public void removePhoto(Book book) {
+        book.removePhoto();
         this.addBook(book);
     }
 }

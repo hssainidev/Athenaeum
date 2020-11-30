@@ -23,11 +23,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,23 +36,25 @@ import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    ListView bookList;
-    ArrayAdapter<Book> bookAdapter;
-    ArrayList<Book> bookDataList;
-    UserDB users;
+    private ListView bookList;
+    private ArrayAdapter<Book> bookAdapter;
+    private ArrayList<Book> bookDataList;
+    private UserDB users;
+    private BookDB booksDB;
+    private String uid;
 
 
-    final String TAG = "BookRetrieval";
+    private final String TAG = "BookRetrieval";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final String uid = getIntent().getExtras().getString("UID");
+        uid = getIntent().getExtras().getString("UID");
         users = new UserDB();
         final User currentUser = users.getUser(uid);
-        final BookDB booksDB = new BookDB();
+        booksDB = new BookDB();
 
         // Initialize the list of books.
         bookList = findViewById(R.id.book_list);
@@ -61,10 +63,6 @@ public class MainActivity extends AppCompatActivity {
         for (String isbn : user_ISBNs) {
             bookDataList.add(booksDB.getBook(isbn));
         }
-
-//        for (Book book: bookDataList) {
-//            Log.d("book", book.getISBN());
-//        }
 
         bookAdapter = new CustomBookList(this, bookDataList);
 
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, BookInfoActivity.class);
                 intent.putExtra("BOOK", book);
                 intent.putExtra("UID", uid);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -149,7 +147,10 @@ public class MainActivity extends AppCompatActivity {
                         } else if (menuItem.getItemId() == R.id.menu_profile) {
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                             Bundle bundle = new Bundle();
+                            bundle.putSerializable("user", currentUser);
                             bundle.putSerializable("profile", currentUser.getProfile());
+                            bundle.putString("UID", uid);
+                            bundle.putBoolean("fromSearch", false);
                             intent.putExtras(bundle);
                             startActivity(intent);
                         } else if (menuItem.getItemId() == R.id.menu_owned) {
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddBookActivity.class);
                 intent.putExtra("UID", uid);
-                startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
 
@@ -212,28 +213,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
-        // Retrieve the information for the books and add it to the books list.
-//        final CollectionReference collectionReference = booksDB.getCollection();
-//
-//        collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-//                    FirebaseFirestoreException error) {
-//                if (error != null) {
-//                    return;
-//                }
-//                bookDataList.clear();
-//                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-//                {
-//                    Log.d(TAG, String.valueOf(doc.getData().get("ISBN")));
-//                    String ISBN = (String) doc.getData().get("isbn");
-//                    String author = (String) doc.getData().get("author");
-//                    String title = (String) doc.getData().get("title");
-//                    bookDataList.add(new Book(ISBN, author, title)); // Adding the cities and provinces from FireStore
-//                }
-//                bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
-//            }
-//        });
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1) {
+            bookDataList.clear();
+            ArrayList<String> user_ISBNs = users.getUser(uid).getBooks();
+            for (String isbn : user_ISBNs) {
+                bookDataList.add(booksDB.getBook(isbn));
+            }
+            bookAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -56,8 +56,20 @@ public class AddBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String authorString = author.getText().toString();
+                if (authorString.length() == 0) {
+                    author.setError("You must enter an author name.");
+                    return;
+                }
                 String ISBNString = ISBN.getText().toString();
+                if (ISBNString.length() == 0) {
+                    author.setError("You must enter an ISBN.");
+                    return;
+                }
                 String titleString = title.getText().toString();
+                if (titleString.length() == 0) {
+                    author.setError("You must enter a title.");
+                    return;
+                }
                 String descriptionString = description.getText().toString();
 
                 Book newBook = new Book(ISBNString, authorString, titleString);
@@ -71,9 +83,8 @@ public class AddBookActivity extends AppCompatActivity {
 
                 userDB.addUser(user, uid);
                 bookDB.addBook(newBook);
-                Intent intent = new Intent(AddBookActivity.this, MainActivity.class);
-                intent.putExtra("UID", uid);
-                startActivity(intent);
+                setResult(1);
+                finish();
             }
         });
     }
@@ -114,22 +125,19 @@ public class AddBookActivity extends AppCompatActivity {
                         description.setText("");
                         String authorString = parseString(response, "authors");
                         if (authorString == null) {
-                            Toast.makeText(AddBookActivity.this, "Book info could not be found.", Toast.LENGTH_LONG).show();
-                            return;
+                            Toast.makeText(AddBookActivity.this, "Some book info could not be found.", Toast.LENGTH_LONG).show();
                         } else {
                             author.setText(authorString);
                         }
                         String titleString = parseString(response, "title");
                         if (titleString == null) {
-                            Toast.makeText(AddBookActivity.this, "Book info could not be found.", Toast.LENGTH_LONG).show();
-                            return;
+                            Toast.makeText(AddBookActivity.this, "Some book info could not be found.", Toast.LENGTH_LONG).show();
                         } else {
                             title.setText(titleString);
                         }
                         String descriptionString = parseString(response, "description");
                         if (descriptionString == null) {
-                            Toast.makeText(AddBookActivity.this, "Book info could not be found.", Toast.LENGTH_LONG).show();
-                            return;
+                            Toast.makeText(AddBookActivity.this, "Some book info could not be found.", Toast.LENGTH_LONG).show();
                         } else {
                             description.setText(descriptionString);
                         }
