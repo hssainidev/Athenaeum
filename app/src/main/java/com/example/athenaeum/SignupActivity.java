@@ -67,6 +67,14 @@ public class SignupActivity extends AppCompatActivity {
                 if (passwordText.length() == 0 || passwordConfirmText.length() == 0 || !passwordText.equals(passwordConfirmText)) {
                     passConfirm.setError("Your passwords must match.");
                     return;
+                } else if (passwordText.length() < 6) {
+                    passConfirm.setError("Your password must be at least 6 characters long.");
+                    return;
+                }
+
+                if (userDB.doesUsernameExist(usernameText)) {
+                    username.setError("That username is already in use.");
+                    return;
                 }
 
                 verify = true;
