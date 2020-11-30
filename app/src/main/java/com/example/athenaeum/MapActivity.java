@@ -1,3 +1,29 @@
+/*
+ * MapActivity
+ *
+ * November 30 2020
+ *
+ * Copyright 2020 Natalie Iwaniuk, Harpreet Saini, Jack Gray, Jorge Marquez Peralta, Ramana Vasanthan, Sree Nidhi Thanneeru
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ * Referenced for Map
+ * https://developers.google.com/maps/documentation/android-sdk/overview
+ * by Google Developers
+ * Published November 19, 2020
+ * Licensed under the Apache 2.0 License.
+ */
+
 package com.example.athenaeum;
 
 import android.content.Intent;
@@ -17,39 +43,48 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * This Activity allows a user to view a pickup location for a book.
+ * If the user owns the book, they can change the location.
+ */
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    LatLng chosenLocation;
-    boolean isOwner;
+    private LatLng chosenLocation;
+    private boolean isOwner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_map);
+
+        // Retrieve the book and uid.
         final Book book = (Book) getIntent().getSerializableExtra("BOOK");
         final String uid = getIntent().getExtras().getString("UID");
+
+        // Set the isOwner boolean based on if the current user is the owner.
         if (book.getOwnerUID().equals(uid)) {
             isOwner = true;
         } else {
             isOwner = false;
         }
+
         if (book.getLocation() != null) {
+            // Set the location to the book's location if it exists.
             chosenLocation = book.getLocation().getLocation();
         } else {
             // Default location
             chosenLocation = new LatLng(53.5232189, -113.5263186);
         }
 
+        // Initialize the toolbar.
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.map_toolbar);
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-
         TextView toolbar_title = findViewById(R.id.map_toolbar_title);
         toolbar_title.setText(book.getTitle() + "'s Location");
 
@@ -59,17 +94,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // Initialize the choose location button.
         Button choose_location_button = (Button) findViewById(R.id.choose_location_button);
         if (!isOwner) {
+            // Hide the button if the user is not the owner.
             choose_location_button.setVisibility(View.GONE);
         } else {
             choose_location_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    // Ensure that the non-owner cannot edit the location, even if they manage to click the button.
                     if (!isOwner) {
                         Toast.makeText(MapActivity.this, "You can't edit the location of this book!", Toast.LENGTH_LONG).show();
                     }
-                    // return chosen location & set the book's location to it.
+                    // Return chosen location & set the book's location to it.
                     Intent intent = new Intent();
                     intent.putExtra("LOCATION", chosenLocation);
                     setResult(1, intent);
@@ -105,6 +143,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onMarkerDrag(Marker marker) {
             }
+            // If the marker is dragged, set the chosen location to the current one.
             @Override
             public void onMarkerDragEnd(Marker marker) {
                 chosenLocation = marker.getPosition();
