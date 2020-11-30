@@ -62,12 +62,12 @@ public class AddBookActivity extends AppCompatActivity {
                 }
                 String ISBNString = ISBN.getText().toString();
                 if (ISBNString.length() == 0) {
-                    author.setError("You must enter an ISBN.");
+                    ISBN.setError("You must enter an ISBN.");
                     return;
                 }
                 String titleString = title.getText().toString();
                 if (titleString.length() == 0) {
-                    author.setError("You must enter a title.");
+                    title.setError("You must enter a title.");
                     return;
                 }
                 String descriptionString = description.getText().toString();

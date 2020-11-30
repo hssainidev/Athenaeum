@@ -28,11 +28,11 @@ public class NotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_notification);
-        linearLayout=findViewById(R.id.notification_activity);
+        linearLayout = findViewById(R.id.notification_activity);
 
         final String uid = getIntent().getExtras().getString("UID");
         final ArrayList<String> books = (ArrayList<String>) getIntent().getExtras().getSerializable("ownedBooks");
-        final ArrayList<Book> acceptedBooks=(ArrayList<Book>) getIntent().getExtras().getSerializable("acceptedBooks");
+        final ArrayList<Book> acceptedBooks = (ArrayList<Book>) getIntent().getExtras().getSerializable("acceptedBooks");
         final UserDB users = new UserDB();
         final BookDB booksDB = new BookDB();
         final User currentUser = users.getUser(uid);
@@ -60,9 +60,8 @@ public class NotificationActivity extends AppCompatActivity {
                             String ownerUID = (String) data.get("ownerUID");
                             User owner = users.getUser(ownerUID);
                             TextView requestedString = new TextView(NotificationActivity.this);
-                            requestedString.setText(String.format("%s has requested %s", borrower, title));
-//                            linearLayout.setBackgroundColor(Color.TRANSPARENT);
-                            if (borrower!=null) {
+                            requestedString.setText(String.format("%s has requested %s", borrower.getProfile().getUsername(), title));
+                            if (borrower != null) {
                                 linearLayout.addView(requestedString);
                             }
 
@@ -78,12 +77,11 @@ public class NotificationActivity extends AppCompatActivity {
             });
         }
         for (Book book: acceptedBooks) {
-            User owner=users.getUser(book.getOwnerUID());
-            String title=book.getTitle();
-            TextView acceptedString=new TextView(NotificationActivity.this);
+            User owner = users.getUser(book.getOwnerUID());
+            String title = book.getTitle();
+            TextView acceptedString = new TextView(NotificationActivity.this);
             acceptedString.setText(String.format("%s has accepted your request for %s", owner.getProfile().getUsername(), title));
             linearLayout.addView(acceptedString);
-
         }
 
 
