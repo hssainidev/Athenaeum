@@ -36,23 +36,25 @@ import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    ListView bookList;
-    ArrayAdapter<Book> bookAdapter;
-    ArrayList<Book> bookDataList;
-    UserDB users;
+    private ListView bookList;
+    private ArrayAdapter<Book> bookAdapter;
+    private ArrayList<Book> bookDataList;
+    private UserDB users;
+    private BookDB booksDB;
+    private String uid;
 
 
-    final String TAG = "BookRetrieval";
+    private final String TAG = "BookRetrieval";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final String uid = getIntent().getExtras().getString("UID");
+        uid = getIntent().getExtras().getString("UID");
         users = new UserDB();
         final User currentUser = users.getUser(uid);
-        final BookDB booksDB = new BookDB();
+        booksDB = new BookDB();
 
         // Initialize the list of books.
         bookList = findViewById(R.id.book_list);
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, BookInfoActivity.class);
                 intent.putExtra("BOOK", book);
                 intent.putExtra("UID", uid);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -195,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddBookActivity.class);
                 intent.putExtra("UID", uid);
-                startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
 
@@ -208,5 +210,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1) {
+            bookDataList.clear();
+            ArrayList<String> user_ISBNs = users.getUser(uid).getBooks();
+            for (String isbn : user_ISBNs) {
+                bookDataList.add(booksDB.getBook(isbn));
+            }
+            bookAdapter.notifyDataSetChanged();
+        }
     }
 }
