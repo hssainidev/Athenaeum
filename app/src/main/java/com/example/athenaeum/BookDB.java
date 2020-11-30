@@ -142,4 +142,16 @@ public class BookDB {
         book.confirm(uid);
         this.addBook(book);
     }
+    public void giveBookUpdate(Book book, String ownerUID) {
+        book.giveBook(ownerUID);
+        this.addBook(book);
+    }
+    public void returnToOwner(Book book) {
+        book.returnBook();
+        this.addBook(book);
+    }
+    public void confirmReturn(Book book) {
+        book.receiveReturn();
+        this.addBook(book);
+    }
 }
