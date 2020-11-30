@@ -34,14 +34,28 @@ public class CustomBookList extends ArrayAdapter<Book> {
         }
 
         Book book = books.get(position);
+        UserDB users = new UserDB();
 
         TextView bookTitle = view.findViewById(R.id.book_title);
         TextView bookAuthor = view.findViewById(R.id.book_author);
         TextView bookISBN = view.findViewById(R.id.book_isbn);
+        TextView bookStatus = view.findViewById(R.id.book_status);
+        TextView bookOwner = view.findViewById(R.id.book_owner);
+        TextView bookBorrower = view.findViewById(R.id.book_borrower);
 
         bookTitle.setText(book.getTitle());
         bookAuthor.setText(book.getAuthor());
         bookISBN.setText(book.getISBN());
+        bookStatus.setText(book.getStatus());
+        bookOwner.setText("Owner: " + users.getUser(book.getOwnerUID()).getProfile().getUsername());
+        if (book.getStatus().equals("Borrowed") || book.getStatus().equals("Accepted")) {
+            bookBorrower.setVisibility(View.VISIBLE);
+            if (book.getOwnerUID().equals(book.getBorrowerUID()) || book.getBorrowerUID() == null) {
+                bookBorrower.setText("Borrower: " + users.getUser(book.getRequesters().get(0)).getProfile().getUsername());
+            } else {
+                bookBorrower.setText("Borrower: " + users.getUser(book.getBorrowerUID()).getProfile().getUsername());
+            }
+        }
 
         return view;
 

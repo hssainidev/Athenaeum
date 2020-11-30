@@ -230,12 +230,11 @@ public class Book implements Serializable {
         return this.photo;
     }
 
-
-//    public void addRequesters(User requester){
-//        this.requesters.add(requester);
-//    }
-
     public ArrayList<String> getRequesters() {
         return this.requesters;
+    }
+
+    public void removeRequester(String uid) {
+        this.requesters.remove(uid);
     }
 }
