@@ -7,16 +7,4 @@
     android:background="@color/colorPrimary"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/openMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@android:drawable/ic_notification_overlay" />
-
-    </FrameLayout>
 </androidx.appcompat.widget.Toolbar>

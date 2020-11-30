@@ -1,7 +1,9 @@
 package com.example.athenaeum;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,6 +12,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -19,10 +23,17 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     ListView bookList;
@@ -33,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     final String TAG = "BookRetrieval";
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +90,40 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         NavigationUI.setupWithNavController(
                 toolbar, navController, appBarConfiguration);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.nav_view);
+
+
+        final int[] notificationCounter = new int[]{0};
+        for (String book : user_ISBNs) {
+            final DocumentReference documentReference = FirebaseFirestore.getInstance().collection("Books").document(book);
+            documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) {
+                    if (error != null) {
+                        Log.w(TAG, "Listen failed", error);
+                    }
+
+                    if (snapshot != null && snapshot.exists()) {
+                        Map<String, Object> data = snapshot.getData();
+
+                        assert data != null;
+                        Object myVar = data.get("status");
+                        if (!Objects.equals(data.get("status"), "Available")) {
+                            notificationCounter[0]++;
+                            Log.d(TAG, "Current data: " + snapshot.getData());
+                            TextView view = (TextView) navigationView.getMenu().findItem(R.id.menu_notifications).getActionView();
+                            view.setText(String.valueOf(notificationCounter[0]));
+
+                            view.setBackground(getResources().getDrawable(R.drawable.shape));
+
+                        }
+                    } else {
+                        Log.d(TAG, "Current data: null");
+                    }
+                }
+            });
+        }
+
 
         // Add the current user's name and username to the header.
         View header = navigationView.getHeaderView(0);
