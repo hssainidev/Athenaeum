@@ -20,12 +20,10 @@
 
 package com.example.athenaeum;
 
+import static android.content.ContentValues.TAG;
+
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -36,8 +34,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * This class represents a connection to the firestore database.
  * It contains methods intended for dealing with the Users collection.
@@ -45,7 +41,7 @@ import static android.content.ContentValues.TAG;
 public class UserDB {
 
     private ArrayList<User> users;
-    private FirebaseFirestore usersDB;
+    private final FirebaseFirestore usersDB;
 
     /**
      * This constructs a UserDB object by connecting to the firestore database.
@@ -72,21 +68,10 @@ public class UserDB {
      * @param uid The UID used to get a path to an existing entry or create a new one.
      */
     public void addUser(User user, String uid) {
-        final User user1 = user;
         usersDB.collection("Users")
                 .document(uid).set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Added User successfully");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Could not add user");
-                    }
-                });
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Added User successfully"))
+                .addOnFailureListener(e -> Log.d(TAG, "Could not add user"));
     }
 
     /**
@@ -107,7 +92,7 @@ public class UserDB {
         }
         while (!userFind.isComplete()) {
         }
-        return (User) userFind.getResult().toObject(User.class);
+        return userFind.getResult().toObject(User.class);
     }
 
     /**

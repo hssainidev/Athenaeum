@@ -10,15 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="16"
-        android:hint="Name"
-        android:inputType="textPersonName" />
+        android:hint="@string/name"
+        android:inputType="textPersonName"
+        android:autofillHints="name" />
 
     <EditText
         android:id="@+id/edit_phoneNum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="16"
-        android:hint="Phone Number"
-        android:inputType="phone" />
+        android:hint="@string/phone_number"
+        android:inputType="phone"
+        android:autofillHints="phone" />
 
 </LinearLayout>

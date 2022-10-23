@@ -3,4 +3,4 @@
     android:id="@+id/notification_activity"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"></LinearLayout>
+    android:orientation="vertical" />

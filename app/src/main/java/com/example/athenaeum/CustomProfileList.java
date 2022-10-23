@@ -37,8 +37,8 @@ import java.util.ArrayList;
  * and a Context for the activity it was constructed in.
  */
 public class CustomProfileList extends ArrayAdapter<AthenaeumProfile> {
-    private ArrayList<AthenaeumProfile> profiles;
-    private Context context;
+    private final ArrayList<AthenaeumProfile> profiles;
+    private final Context context;
 
     /**
      * This constructs a new CustomProfileList with the context of the parent activity and

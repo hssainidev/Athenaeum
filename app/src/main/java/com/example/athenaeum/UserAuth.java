@@ -35,7 +35,7 @@ import com.google.firebase.auth.FirebaseUser;
  * This class handles the Firebase authentication of users.
  */
 public class UserAuth {
-    private FirebaseAuth userAuth;
+    private final FirebaseAuth userAuth;
 
     /**
      * Constructor to set the userAuth as the current FirebaseAuth instance.

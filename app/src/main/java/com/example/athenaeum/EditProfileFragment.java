@@ -23,9 +23,7 @@ package com.example.athenaeum;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
@@ -50,12 +48,12 @@ public class EditProfileFragment extends DialogFragment{
 
     //ensure the creating activity can handle onOkPressed()
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             listener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
+            throw new RuntimeException(context
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -64,51 +62,48 @@ public class EditProfileFragment extends DialogFragment{
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         //get the view and EditText fields
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.edit_profile_layout, null);
+        View view = getLayoutInflater().inflate(R.layout.edit_profile_layout, null);
         editName = view.findViewById(R.id.edit_name);
         editPhoneNum = view.findViewById(R.id.edit_phoneNum);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        //when OK is pressed
         return builder
                 .setView(view)
                 .setTitle("Edit Profile")
                 .setNegativeButton("Cancel", null)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    //when OK is pressed
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //take strings from EditText fields
-                        String name = editName.getText().toString();
-                        String phoneNum = editPhoneNum.getText().toString();
+                .setPositiveButton("OK", (dialog, which) -> {
+                    //take strings from EditText fields
+                    String name = editName.getText().toString();
+                    String phoneNum = editPhoneNum.getText().toString();
 
-                        //Ensure name field is not blank, otherwise close without saving changes
-                        if(name == ""){
-                            editName.setError("Name cannot be blank");
-                            return;
-                        }
-
-                        //Ensure phone number field is not blank, otherwise close without saving
-                        //changes
-                        if(phoneNum == ""){
-                            editPhoneNum.setError("Phone number cannot be blank");
-                            return;
-                        }
-
-                        //Ensure phone number field only contains numbers, otherwise close without
-                        //saving changes
-                        if(Pattern.matches("0-9", phoneNum)){
-                            editPhoneNum.setError("Phone number cannot contain letters or symbols");
-                            return;
-                        }
-
-                        //If validation tests are passed, add new strings to a bundle and pass it
-                        //back to the calling activity to be handled.
-                        Bundle bundle = new Bundle();
-                        bundle.putString("name", name);
-                        bundle.putString("phoneNum", phoneNum);
-
-                        listener.onOkPressed(bundle);
+                    //Ensure name field is not blank, otherwise close without saving changes
+                    if(name.equals("")){
+                        editName.setError("Name cannot be blank");
+                        return;
                     }
+
+                    //Ensure phone number field is not blank, otherwise close without saving
+                    //changes
+                    if(phoneNum.equals("")){
+                        editPhoneNum.setError("Phone number cannot be blank");
+                        return;
+                    }
+
+                    //Ensure phone number field only contains numbers, otherwise close without
+                    //saving changes
+                    if(Pattern.matches("0-9", phoneNum)){
+                        editPhoneNum.setError("Phone number cannot contain letters or symbols");
+                        return;
+                    }
+
+                    //If validation tests are passed, add new strings to a bundle and pass it
+                    //back to the calling activity to be handled.
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", name);
+                    bundle.putString("phoneNum", phoneNum);
+
+                    listener.onOkPressed(bundle);
                 }).create();
     }
 }

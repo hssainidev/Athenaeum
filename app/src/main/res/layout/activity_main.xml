@@ -22,14 +22,14 @@
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="10dp"
             android:background="@color/colorButton"
-            android:text="Add Book"
+            android:text="@string/add_book"
             android:textColor="#FFFFFF" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:id="@+id/searchButton"
-            android:text="Search by Keyword"
+            android:text="@string/search_by_keyword"
             android:textColor="#FFFFFF"
             android:background="@color/colorButton"/>
 
@@ -38,11 +38,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph" />

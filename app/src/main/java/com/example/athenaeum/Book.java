@@ -29,6 +29,7 @@ import java.util.Map;
  * and may also have a description and/or photo.
  */
 
+@SuppressWarnings("unchecked")
 public class Book implements Serializable {
     private String ISBN;
     private String author;
@@ -197,8 +198,9 @@ public class Book implements Serializable {
         if (location == null || location.size() == 0) {
             this.location = null;
         } else {
-            Map<String, Object> values = (Map<String, Object>) location.get("location");
-            if (values.size() == 2) {
+            Map<String, Object> values = (Map<String, Object>) (location.get("location"));
+            assert values != null;
+            if (values.size() == 2 && values.containsKey("latitude") && values.containsKey("longitude")) {
                 double latitude = (double) values.get("latitude");
                 double longitude = (double) values.get("longitude");
                 this.location = new BookLocation(latitude, longitude);

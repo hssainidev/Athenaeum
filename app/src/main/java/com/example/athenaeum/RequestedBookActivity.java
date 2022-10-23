@@ -22,8 +22,6 @@ package com.example.athenaeum;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,11 +35,7 @@ import java.util.ArrayList;
  * Selecting a book will open the book's information page.
  */
 public class RequestedBookActivity extends AppCompatActivity {
-    private TextView name;
-    private ListView bookList;
-    private ArrayAdapter<Book> bookAdapter;
     private final BookDB booksDB = new BookDB();
-    private ArrayList<Book> bookDataList;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -52,27 +46,24 @@ public class RequestedBookActivity extends AppCompatActivity {
         final String uid = getIntent().getExtras().getString("UID");
         // Retrieve profile for username.
         AthenaeumProfile profile = (AthenaeumProfile) getIntent().getExtras().getSerializable("profile");
-        name = findViewById(R.id.headerLabel);
+        TextView name = findViewById(R.id.headerLabel);
         name.setText(String.format("Books Requested by %s", profile.getUsername()));
 
         // Retrieve the list of requested books from the database.
-        bookDataList = (ArrayList<Book>) booksDB.getRequestedBooks(uid);
+        ArrayList<Book> bookDataList = booksDB.getRequestedBooks(uid);
 
         // Initialize the ListView for the books from the database.
-        bookList = findViewById(R.id.requestedBookList);
-        bookAdapter = new CustomBookList(this, bookDataList);
+        ListView bookList = findViewById(R.id.requestedBookList);
+        ArrayAdapter<Book> bookAdapter = new CustomBookList(this, bookDataList);
         bookList.setAdapter(bookAdapter);
 
         // Set the listener that opens the book information if a book is clicked.
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Book book = (Book) parent.getAdapter().getItem(position);
-                Intent intent = new Intent(RequestedBookActivity.this, BookInfoActivity.class);
-                intent.putExtra("BOOK", book);
-                intent.putExtra("UID", uid);
-                startActivity(intent);
-            }
+        bookList.setOnItemClickListener((parent, view, position, id) -> {
+            Book book = (Book) parent.getAdapter().getItem(position);
+            Intent intent = new Intent(RequestedBookActivity.this, BookInfoActivity.class);
+            intent.putExtra("BOOK", book);
+            intent.putExtra("UID", uid);
+            startActivity(intent);
         });
 
     }

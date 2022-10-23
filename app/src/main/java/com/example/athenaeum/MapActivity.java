@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -63,11 +64,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         final String uid = getIntent().getExtras().getString("UID");
 
         // Set the isOwner boolean based on if the current user is the owner.
-        if (book.getOwnerUID().equals(uid)) {
-            isOwner = true;
-        } else {
-            isOwner = false;
-        }
+        isOwner = book.getOwnerUID().equals(uid);
 
         if (book.getLocation() != null) {
             // Set the location to the book's location if it exists.
@@ -79,40 +76,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // Initialize the toolbar.
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.map_toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
         TextView toolbar_title = findViewById(R.id.map_toolbar_title);
-        toolbar_title.setText(book.getTitle() + "'s Location");
+        toolbar_title.setText(String.format("%s's Location", book.getTitle()));
 
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
 
         // Initialize the choose location button.
-        Button choose_location_button = (Button) findViewById(R.id.choose_location_button);
+        Button choose_location_button = findViewById(R.id.choose_location_button);
         if (!isOwner) {
             // Hide the button if the user is not the owner.
             choose_location_button.setVisibility(View.GONE);
         } else {
-            choose_location_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Ensure that the non-owner cannot edit the location, even if they manage to click the button.
-                    if (!isOwner) {
-                        Toast.makeText(MapActivity.this, "You can't edit the location of this book!", Toast.LENGTH_LONG).show();
-                    }
-                    // Return chosen location & set the book's location to it.
-                    Intent intent = new Intent();
-                    intent.putExtra("LOCATION", chosenLocation);
-                    setResult(1, intent);
-                    finish();
+            choose_location_button.setOnClickListener(view -> {
+                // Ensure that the non-owner cannot edit the location, even if they manage to click the button.
+                if (!isOwner) {
+                    Toast.makeText(MapActivity.this, "You can't edit the location of this book!", Toast.LENGTH_LONG).show();
                 }
+                // Return chosen location & set the book's location to it.
+                Intent intent = new Intent();
+                intent.putExtra("LOCATION", chosenLocation);
+                setResult(1, intent);
+                finish();
             });
         }
     }
@@ -138,14 +128,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(chosenLocation));
         googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
-            public void onMarkerDragStart(Marker marker) {
+            public void onMarkerDragStart(@NonNull Marker marker) {
             }
             @Override
-            public void onMarkerDrag(Marker marker) {
+            public void onMarkerDrag(@NonNull Marker marker) {
             }
             // If the marker is dragged, set the chosen location to the current one.
             @Override
-            public void onMarkerDragEnd(Marker marker) {
+            public void onMarkerDragEnd(@NonNull Marker marker) {
                 chosenLocation = marker.getPosition();
             }
         });

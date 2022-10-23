@@ -20,12 +20,10 @@
 
 package com.example.athenaeum;
 
+import static android.content.ContentValues.TAG;
+
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -38,14 +36,12 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * This class represents a connection to the firestore database.
  * It contains methods intended for dealing with the Books collection.
  */
 public class BookDB {
-    private FirebaseFirestore booksDB;
+    private final FirebaseFirestore booksDB;
     private ArrayList<Book> books;
 
     /**
@@ -75,18 +71,8 @@ public class BookDB {
         final Book book1 = book;
         booksDB.collection("Books")
                 .document(book.getISBN()).set(book)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Book added successfully");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Couldn't add " + book1.getISBN());
-                    }
-                });
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Book added successfully"))
+                .addOnFailureListener(e -> Log.w(TAG, "Couldn't add " + book1.getISBN()));
     }
 
     /**
@@ -98,7 +84,6 @@ public class BookDB {
      */
     public ArrayList<Book> searchBooks(String keyword) {
         final ArrayList<Book> bookSearch = new ArrayList<>();
-        final String keyword1 = keyword;
         Task<QuerySnapshot> bookQuery = booksDB.collection("Books").get();
         while (!bookQuery.isComplete()) {
         }
@@ -108,7 +93,7 @@ public class BookDB {
                 if (book.getStatus().equals("Accepted") || book.getStatus().equals("Borrowed")) { continue; }
                 Log.d("book", book.getDescription());
                 String fullDescription = book.getDescription() + book.getAuthor() + book.getISBN()+book.getTitle();
-                if (fullDescription.toLowerCase().contains(keyword1.toLowerCase())) {
+                if (fullDescription.toLowerCase().contains(keyword.toLowerCase())) {
                     bookSearch.add(document.toObject(Book.class));
                 }
             } catch (Exception e) {
@@ -151,7 +136,6 @@ public class BookDB {
      */
     public ArrayList<Book> getRequestedBooks(String uid) {
         final ArrayList<Book> bookRequest = new ArrayList<>();
-        final String uid1=uid;
         Task<QuerySnapshot> bookQuery = booksDB.collection("Books").get();
         while (!bookQuery.isComplete()) {
         }
@@ -159,7 +143,7 @@ public class BookDB {
             Book book = document.toObject(Book.class);
             try {
                 Log.d("book", book.getDescription());
-                if (book.getRequesters().contains(uid1) && book.getStatus().equals("Requested")) {
+                if (book.getRequesters().contains(uid) && book.getStatus().equals("Requested")) {
                     bookRequest.add(document.toObject(Book.class));
                 }
             } catch (Exception e) {
@@ -178,7 +162,6 @@ public class BookDB {
      */
     public ArrayList<Book> getAcceptedBooks(String uid) {
         final ArrayList<Book> bookAccept = new ArrayList<>();
-        final String uid1=uid;
         Task<QuerySnapshot> bookQuery = booksDB.collection("Books").get();
         while (!bookQuery.isComplete()) {
         }
@@ -187,7 +170,7 @@ public class BookDB {
             try {
                 Log.d("book", book.getDescription());
                 boolean borrowConfirm = (book.getStatus().equals("Borrowed") && book.getBorrowerUID().equals(book.getOwnerUID()));
-                if (book.getRequesters().contains(uid1) && (borrowConfirm || book.getStatus().equals("Accepted"))) {
+                if (book.getRequesters().contains(uid) && (borrowConfirm || book.getStatus().equals("Accepted"))) {
                     bookAccept.add(document.toObject(Book.class));
                 }
             } catch (Exception e) {
@@ -213,7 +196,7 @@ public class BookDB {
         }
         while (!bookFind.isComplete()) {
         }
-        return (Book) bookFind.getResult().toObject(Book.class);
+        return bookFind.getResult().toObject(Book.class);
     }
 
     /**

@@ -1,13 +1,9 @@
 package com.example.athenaeum;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for the user class.
@@ -21,7 +17,7 @@ public class UserTest {
     void testCreateUser() {
         AthenaeumProfile profile = new AthenaeumProfile("Test", "TestName", "tester", "7801234567", "testing@gmail.com");
         User user = new User(profile);
-        assertEquals(user.getProfile(), profile);
+        Assertions.assertEquals(user.getProfile(), profile);
     }
 
     /**
@@ -31,7 +27,7 @@ public class UserTest {
     void testOverloadedProfile() {
         AthenaeumProfile profile = new AthenaeumProfile("Test", "tester", "testing@gmail.com");
         User user = new User(profile);
-        assertEquals(user.getProfile(), profile);
+        Assertions.assertEquals(user.getProfile(), profile);
     }
 
     /**
@@ -43,7 +39,7 @@ public class UserTest {
         AthenaeumProfile profile = new AthenaeumProfile("Test", "tester", "testing@gmail.com");
         User user = new User(wrongProfile);
         user.setProfile(profile);
-        assertEquals(user.getProfile(), profile);
+        Assertions.assertEquals(user.getProfile(), profile);
 
     }
 
@@ -56,7 +52,7 @@ public class UserTest {
         User user = new User(profile);
         Book book = new Book("123456789", "Author", "Name");
         user.addBook(book.getISBN());
-        assertEquals(user.getBooks().size(), 1);
+        Assertions.assertEquals(user.getBooks().size(), 1);
     }
 
     /**
@@ -70,9 +66,9 @@ public class UserTest {
         ArrayList<String> books = new ArrayList<>();
         books.add(book.getISBN());
         user.setBooks(books);
-        assertEquals(user.getBooks().size(), 1);
+        Assertions.assertEquals(user.getBooks().size(), 1);
         books.remove(book.getISBN());
         user.setBooks(books);
-        assertEquals(user.getBooks().size(), 0);
+        Assertions.assertEquals(user.getBooks().size(), 0);
     }
 }

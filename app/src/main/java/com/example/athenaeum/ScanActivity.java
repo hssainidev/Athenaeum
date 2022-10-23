@@ -27,7 +27,6 @@ package com.example.athenaeum;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -46,7 +45,7 @@ import com.google.zxing.integration.android.IntentResult;
  */
 public class ScanActivity extends AppCompatActivity {
     EditText isbn_edittext;
-    ScanIsbn scanner = new ScanIsbn();
+    final ScanIsbn scanner = new ScanIsbn();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,52 +66,44 @@ public class ScanActivity extends AppCompatActivity {
         final BookDB booksDB = new BookDB();
 
         // Set the listener for the scanner button to call ScanISBN scanCode when clicked.
-        open_scanner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scanner.scanCode(ScanActivity.this);
-            }
-        });
+        open_scanner.setOnClickListener(view -> scanner.scanCode(ScanActivity.this));
 
         // Initialize the listener for the confirm button.
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Retrieve the ISBN and check to make sure that an ISBN was entered.
-                String isbn = isbn_edittext.getText().toString();
-                if (isbn.length() == 0) {
-                    isbn_edittext.setError("You must enter an ISBN.");
-                }
-                // Retrieve the book.
-                Book book = booksDB.getBook(isbn);
-                if (book == null) {
-                    Toast.makeText(ScanActivity.this, "That book could not be found.", Toast.LENGTH_LONG).show();
-                } else if (book.getOwnerUID().equals(uid)) {
-                    // If the user owns the book, check the two potential states.
-                    if (book.getStatus().equals("Accepted")) {
-                        // Confirming book was given to borrower.
-                        booksDB.giveBookUpdate(book, uid);
-                        Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was given to the borrower!", Toast.LENGTH_LONG).show();
-                        return;
-                    } else if (book.getStatus().equals("Available") && !book.getBorrowerUID().equals(uid)) {
-                        // Confirming book was received from borrower.
-                        booksDB.confirmReturn(book);
-                        Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was received from the borrower!", Toast.LENGTH_LONG).show();
-                        return;
-                    }
-                } else if (book.getBorrowerUID().equals(uid) && book.getStatus().equals("Borrowed")) {
-                    // Returning book to owner.
-                    booksDB.returnToOwner(book);
-                    Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was returned to the owner!", Toast.LENGTH_LONG).show();
-                    return;
-                } else if (book.getRequesters().contains(uid) && book.getBorrowerUID().equals(book.getOwnerUID()) && book.getStatus().equals("Borrowed")) {
-                    // Receiving a book from owner.
-                    booksDB.confirmBorrow(book, uid);
-                    Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was received from the owner!", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                Toast.makeText(ScanActivity.this, "That book's status could not be changed!", Toast.LENGTH_LONG).show();
+        confirm.setOnClickListener(view -> {
+            // Retrieve the ISBN and check to make sure that an ISBN was entered.
+            String isbn = isbn_edittext.getText().toString();
+            if (isbn.length() == 0) {
+                isbn_edittext.setError("You must enter an ISBN.");
             }
+            // Retrieve the book.
+            Book book = booksDB.getBook(isbn);
+            if (book == null) {
+                Toast.makeText(ScanActivity.this, "That book could not be found.", Toast.LENGTH_LONG).show();
+            } else if (book.getOwnerUID().equals(uid)) {
+                // If the user owns the book, check the two potential states.
+                if (book.getStatus().equals("Accepted")) {
+                    // Confirming book was given to borrower.
+                    booksDB.giveBookUpdate(book, uid);
+                    Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was given to the borrower!", Toast.LENGTH_LONG).show();
+                    return;
+                } else if (book.getStatus().equals("Available") && !book.getBorrowerUID().equals(uid)) {
+                    // Confirming book was received from borrower.
+                    booksDB.confirmReturn(book);
+                    Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was received from the borrower!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            } else if (book.getBorrowerUID().equals(uid) && book.getStatus().equals("Borrowed")) {
+                // Returning book to owner.
+                booksDB.returnToOwner(book);
+                Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was returned to the owner!", Toast.LENGTH_LONG).show();
+                return;
+            } else if (book.getRequesters().contains(uid) && book.getBorrowerUID().equals(book.getOwnerUID()) && book.getStatus().equals("Borrowed")) {
+                // Receiving a book from owner.
+                booksDB.confirmBorrow(book, uid);
+                Toast.makeText(ScanActivity.this, "You confirmed that the book \"" + book.getTitle() + "\" was received from the owner!", Toast.LENGTH_LONG).show();
+                return;
+            }
+            Toast.makeText(ScanActivity.this, "That book's status could not be changed!", Toast.LENGTH_LONG).show();
         });
     }
 

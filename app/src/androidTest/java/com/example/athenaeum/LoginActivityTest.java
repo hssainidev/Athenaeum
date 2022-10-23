@@ -1,12 +1,13 @@
 package com.example.athenaeum;
+
+import static junit.framework.TestCase.assertTrue;
+
 import android.app.Activity;
+import android.widget.EditText;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-
-import android.widget.EditText;
-import android.widget.ListView;
 
 import com.robotium.solo.Solo;
 
@@ -15,10 +16,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 /**
  * Test class for LoginActivity. All the UI tests for the app are written here
@@ -29,23 +26,21 @@ import static org.junit.Assert.assertFalse;
 public class LoginActivityTest{
     private Solo solo;
     @Rule
-    public ActivityTestRule<LoginActivity> rule =
+    public final ActivityTestRule<LoginActivity> rule =
             new ActivityTestRule<>(LoginActivity.class, true, true);
 
     /**
      * Runs before all tests and creates solo instance.
-     * @throws Exception
      */
     @Before
-    public void setUp() throws Exception{
+    public void setUp() {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
     }
     /**
      * Gets the Activity
-     * @throws Exception
      */
     @Test
-    public void start() throws Exception{
+    public void start() {
         Activity activity = rule.getActivity();
     }
 
@@ -330,10 +325,9 @@ public class LoginActivityTest{
 
     /**
      * Closes the activity after each test
-     * @throws Exception
      */
     @After
-    public void tearDown() throws Exception{
+    public void tearDown() {
         solo.finishOpenedActivities();
     }
 

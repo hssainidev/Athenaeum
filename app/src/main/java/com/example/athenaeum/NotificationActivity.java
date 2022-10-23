@@ -25,14 +25,10 @@ import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -43,6 +39,7 @@ import java.util.Objects;
  * based on how many of their books are requested and how many books
  * they've requested are accepted.
  */
+@SuppressWarnings("unchecked")
 public class NotificationActivity extends AppCompatActivity {
 
     private static final String TAG = "Hello! ";
@@ -65,49 +62,48 @@ public class NotificationActivity extends AppCompatActivity {
         // Look through all of the user's own books.
         for (String book : books) {
             final DocumentReference documentReference = FirebaseFirestore.getInstance().collection("Books").document(book);
-            documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException error) {
-                    if (error != null) {
-                        Log.w(TAG, "Listen failed", error);
-                    }
+            documentReference.addSnapshotListener((snapshot, error) -> {
+                if (error != null) {
+                    Log.w(TAG, "Listen failed", error);
+                }
 
-                    if (snapshot != null && snapshot.exists()) {
-                        Map<String, Object> data = snapshot.getData();
+                if (snapshot != null && snapshot.exists()) {
+                    Map<String, Object> data = snapshot.getData();
 
-                        // Check if a book is requested.
-                        if (Objects.equals(data.get("status"), "Requested")) {
-                            ArrayList<String> requesters = (ArrayList<String>) data.get("requesters");
-                            String borrowerUID = (String) data.get("borrowerUID");
-                            String ownerUID = (String) data.get("ownerUID");
-                            User borrower = null;
-                            String title = (String) data.get("title");
+                    // Check if a book is requested.
+                    assert data != null;
+                    if (Objects.equals(data.get("status"), "Requested")) {
+                        ArrayList<String> requesters = (ArrayList<String>) data.get("requesters");
+                        String borrowerUID = (String) data.get("borrowerUID");
+                        String ownerUID = (String) data.get("ownerUID");
+                        User borrower;
+                        String title = (String) data.get("title");
 
-                            if (borrowerUID != null && !borrowerUID.equals(ownerUID)) {
-                                // If the borrowerUID exists and is not the same as the ownerUID, then add a notification with that username.
-                                borrower = users.getUser(borrowerUID);
-                                User owner = users.getUser(ownerUID);
-                                TextView requestedString = new TextView(NotificationActivity.this);
-                                requestedString.setText(String.format("%s has requested %s", borrower.getProfile().getUsername(), title));
-                                if (borrower != null) {
-                                    linearLayout.addView(requestedString);
-                                }
-                            } else if (requesters.size() > 0) {
+                        if (borrowerUID != null && !borrowerUID.equals(ownerUID)) {
+                            // If the borrowerUID exists and is not the same as the ownerUID, then add a notification with that username.
+                            borrower = users.getUser(borrowerUID);
+                            User owner = users.getUser(ownerUID);
+                            TextView requestedString = new TextView(NotificationActivity.this);
+                            requestedString.setText(String.format("%s has requested %s", borrower.getProfile().getUsername(), title));
+                            linearLayout.addView(requestedString);
+                        } else {
+                            assert requesters != null;
+                            if (requesters.size() > 0) {
                                 // Otherwise, if there's any requesters, then add their username.
                                 for (String requester : requesters) {
-                                    if (requester == borrowerUID) continue;
+                                    if (Objects.equals(requester, borrowerUID)) continue;
                                     TextView requestedString = new TextView(NotificationActivity.this);
                                     requestedString.setText(String.format("%s has requested %s", users.getUser(requester).getProfile().getUsername(), title));
                                     linearLayout.addView(requestedString);
                                 }
                             }
-                            Log.d(TAG, "Current data: " + snapshot.getData());
-
                         }
+                        Log.d(TAG, "Current data: " + snapshot.getData());
 
-                    } else {
-                        Log.d(TAG, "Current data: null");
                     }
+
+                } else {
+                    Log.d(TAG, "Current data: null");
                 }
             });
         }

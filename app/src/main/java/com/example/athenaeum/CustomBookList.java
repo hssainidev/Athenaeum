@@ -37,8 +37,8 @@ import java.util.ArrayList;
  * and a Context for the activity it was constructed in.
  */
 public class CustomBookList extends ArrayAdapter<Book> {
-    private ArrayList<Book> books;
-    private Context context;
+    private final ArrayList<Book> books;
+    private final Context context;
 
     /**
      * This constructs a new CustomBookList with the context of the parent activity and
@@ -78,15 +78,15 @@ public class CustomBookList extends ArrayAdapter<Book> {
         bookAuthor.setText(book.getAuthor());
         bookISBN.setText(book.getISBN());
         bookStatus.setText(book.getStatus());
-        bookOwner.setText("Owner: " + users.getUser(book.getOwnerUID()).getProfile().getUsername());
+        bookOwner.setText(String.format("Owner: %s", users.getUser(book.getOwnerUID()).getProfile().getUsername()));
 
         // Only displays borrower if book is borrowed or accepted.
         if (book.getStatus().equals("Borrowed") || book.getStatus().equals("Accepted")) {
             bookBorrower.setVisibility(View.VISIBLE);
             if (book.getOwnerUID().equals(book.getBorrowerUID()) || book.getBorrowerUID() == null) {
-                bookBorrower.setText("Borrower: " + users.getUser(book.getRequesters().get(0)).getProfile().getUsername());
+                bookBorrower.setText(String.format("Borrower: %s", users.getUser(book.getRequesters().get(0)).getProfile().getUsername()));
             } else {
-                bookBorrower.setText("Borrower: " + users.getUser(book.getBorrowerUID()).getProfile().getUsername());
+                bookBorrower.setText(String.format("Borrower: %s", users.getUser(book.getBorrowerUID()).getProfile().getUsername()));
             }
         }
 

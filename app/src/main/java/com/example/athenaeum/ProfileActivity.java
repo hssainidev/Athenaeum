@@ -23,7 +23,6 @@ package com.example.athenaeum;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -42,11 +41,9 @@ import java.util.ArrayList;
 public class ProfileActivity extends AppCompatActivity implements EditProfileFragment.OnFragmentInteractionListener{
 
     private TextView title;
-    private TextView username;
     private TextView name;
     private TextView phoneNum;
-    private TextView email;
-    private UserDB db = new UserDB();
+    private final UserDB db = new UserDB();
 
 
     @Override
@@ -58,10 +55,10 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.profile_toolbar);
 
         //get fields for displaying profile data
-        username = findViewById(R.id.profile_username);
+        TextView username = findViewById(R.id.profile_username);
         name = findViewById(R.id.profile_name);
         phoneNum = findViewById(R.id.profile_phoneNum);
-        email = findViewById(R.id.profile_email);
+        TextView email = findViewById(R.id.profile_email);
 
         //get profile from bundle stored in intent
         AthenaeumProfile profile = (AthenaeumProfile) getIntent().getExtras().getSerializable("profile");
@@ -81,33 +78,27 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         }
 
         //set up listener that launches an EditProfileFragment for editing profile data
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment fragment = new EditProfileFragment();
-                fragment.show(getSupportFragmentManager(), "EDIT_PROFILE");
-            }
+        editButton.setOnClickListener(v -> {
+            DialogFragment fragment = new EditProfileFragment();
+            fragment.show(getSupportFragmentManager(), "EDIT_PROFILE");
         });
 
         //get search bar
-        SearchView searchView = (SearchView) findViewById(R.id.profile_search);
+        SearchView searchView = findViewById(R.id.profile_search);
 
         //get ListView for displaying search results
         final ListView listView = findViewById(R.id.profile_search_results);
 
         //when search bar is focused, remove profile data layout and replace with search results ListView
         //return to default when no longer focused
-        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                ConstraintLayout layout = findViewById(R.id.user_info_layout);
-                if(hasFocus){
-                    listView.setVisibility(View.VISIBLE);
-                    layout.setVisibility(View.GONE);
-                } else {
-                    listView.setVisibility(View.GONE);
-                    layout.setVisibility(View.VISIBLE);
-                }
+        searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+            ConstraintLayout layout = findViewById(R.id.user_info_layout);
+            if(hasFocus){
+                listView.setVisibility(View.VISIBLE);
+                layout.setVisibility(View.GONE);
+            } else {
+                listView.setVisibility(View.GONE);
+                layout.setVisibility(View.VISIBLE);
             }
         });
 
@@ -124,17 +115,14 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
 
                 //when user clicks a profile represented in the ListView, launch a new ProfileActivity
                 //displaying that profile's data
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        AthenaeumProfile profile = (AthenaeumProfile) parent.getAdapter().getItem(position);
-                        Intent intent = new Intent(ProfileActivity.this, ProfileActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("profile", profile);
-                        bundle.putBoolean("fromSearch", true);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
+                listView.setOnItemClickListener((parent, view, position, id) -> {
+                    AthenaeumProfile profile1 = (AthenaeumProfile) parent.getAdapter().getItem(position);
+                    Intent intent = new Intent(ProfileActivity.this, ProfileActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("profile", profile1);
+                    bundle.putBoolean("fromSearch", true);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
                 });
                 return true;
             }
@@ -146,12 +134,7 @@ public class ProfileActivity extends AppCompatActivity implements EditProfileFra
         });
 
         //when user hits back button, finish activity
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
     }
 
     /**

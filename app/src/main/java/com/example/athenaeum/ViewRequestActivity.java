@@ -22,8 +22,6 @@ package com.example.athenaeum;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -38,8 +36,8 @@ import java.util.ArrayList;
 public class ViewRequestActivity extends AppCompatActivity{
     ListView requesterList;
     ArrayAdapter<String> requesterAdapter;
-    UserDB userDB = new UserDB();
-    ArrayList<String> requesterDataList = new ArrayList<>();
+    final UserDB userDB = new UserDB();
+    final ArrayList<String> requesterDataList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,34 +64,25 @@ public class ViewRequestActivity extends AppCompatActivity{
         requesterList.setAdapter(requesterAdapter);
 
         //listener for interaction with the requester list
-        requesterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                final String entryUid = arrayList.get(position);;
+        requesterList.setOnItemClickListener((parent, view, position, id) -> {
+            final String entryUid = arrayList.get(position);
 
-                //set up button for accepting requests
-                final Button accept_button = (Button) findViewById(R.id.accept);
-                accept_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        booksDB.acceptRequest(book, entryUid);
-                        setResult(2);
-                        finish();
-                    }
-                });
+            //set up button for accepting requests
+            final Button accept_button = findViewById(R.id.accept);
+            accept_button.setOnClickListener(v -> {
+                booksDB.acceptRequest(book, entryUid);
+                setResult(2);
+                finish();
+            });
 
-                //set up button for declining requests
-                final Button decline_button = (Button) findViewById(R.id.decline);
-                decline_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        booksDB.declineRequest(book, entryUid);
-                        requesterDataList.remove(requesterList.getItemAtPosition(position));
-                        requesterAdapter.notifyDataSetChanged();
-                        setResult(2);
-                    }
-                });
-            }
+            //set up button for declining requests
+            final Button decline_button = findViewById(R.id.decline);
+            decline_button.setOnClickListener(v -> {
+                booksDB.declineRequest(book, entryUid);
+                requesterDataList.remove((String) requesterList.getItemAtPosition(position));
+                requesterAdapter.notifyDataSetChanged();
+                setResult(2);
+            });
         });
     }
 }

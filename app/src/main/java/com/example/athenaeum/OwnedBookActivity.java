@@ -38,14 +38,13 @@ import java.util.ArrayList;
  * This Activity allows a user to view all of the books they own and filter them by status.
  * Selecting a book will open the book's information page.
  */
+@SuppressWarnings("unchecked")
 public class OwnedBookActivity extends AppCompatActivity {
-    private TextView name;
     private ListView bookList;
-    private Spinner mySpinner;
     private ArrayAdapter<Book> bookAdapter;
-    private String[] status = {"All", "Available", "Accepted", "Requested", "Borrowed"};
+    private final String[] status = {"All", "Available", "Accepted", "Requested", "Borrowed"};
     private final BookDB booksDB = new BookDB();
-    private ArrayList<Book> bookDataList = new ArrayList<>();
+    private final ArrayList<Book> bookDataList = new ArrayList<>();
     private String uid;
 
     @Override
@@ -56,7 +55,7 @@ public class OwnedBookActivity extends AppCompatActivity {
 
         // Retrieve profile for username.
         AthenaeumProfile profile = (AthenaeumProfile) getIntent().getExtras().getSerializable("profile");
-        name = findViewById(R.id.headerLabel);
+        TextView name = findViewById(R.id.headerLabel);
         name.setText(String.format("%s's Books", profile.getUsername()));
         // Retrieve uid.
         uid = (String) getIntent().getExtras().getSerializable("UID");
@@ -75,7 +74,7 @@ public class OwnedBookActivity extends AppCompatActivity {
         bookList.setAdapter(bookAdapter);
 
         // Initialize the dropdown menu for the filter.
-        mySpinner = findViewById(R.id.mySpinner);
+        Spinner mySpinner = findViewById(R.id.mySpinner);
         mySpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, status));
         mySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -109,16 +108,13 @@ public class OwnedBookActivity extends AppCompatActivity {
         });
 
         // Set the listener that opens the book information if a book is clicked.
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Book book = (Book) parent.getAdapter().getItem(position);
-                Intent intent = new Intent(OwnedBookActivity.this, BookInfoActivity.class);
-                intent.putExtra("BOOK", book);
-                intent.putExtra("UID", uid);
-                // Open the activity for a result so that the books can be updated if a change is made.
-                startActivityForResult(intent, 1);
-            }
+        bookList.setOnItemClickListener((parent, view, position, id) -> {
+            Book book = (Book) parent.getAdapter().getItem(position);
+            Intent intent = new Intent(OwnedBookActivity.this, BookInfoActivity.class);
+            intent.putExtra("BOOK", book);
+            intent.putExtra("UID", uid);
+            // Open the activity for a result so that the books can be updated if a change is made.
+            startActivityForResult(intent, 1);
         });
     }
 

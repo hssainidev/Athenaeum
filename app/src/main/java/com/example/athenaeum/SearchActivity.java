@@ -22,8 +22,6 @@ package com.example.athenaeum;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,32 +54,26 @@ public class SearchActivity extends AppCompatActivity {
         db = new BookDB();
 
         // Initialize the listener for the search button
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Retrieve the keyword from the EditText and search the books using it.
-                String keyword_string = keyword.getText().toString();
-                list = db.searchBooks(keyword_string);
+        search.setOnClickListener(view -> {
+            // Retrieve the keyword from the EditText and search the books using it.
+            String keyword_string = keyword.getText().toString();
+            list = db.searchBooks(keyword_string);
 
-                // Initialize the ListView with the retrieved books.
-                listView = findViewById(R.id.result_list);
-                adapter = new CustomBookList(SearchActivity.this, list);
-                listView.setAdapter(adapter);
+            // Initialize the ListView with the retrieved books.
+            listView = findViewById(R.id.result_list);
+            adapter = new CustomBookList(SearchActivity.this, list);
+            listView.setAdapter(adapter);
 
-                // Initialize the listener for selecting a book.
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Book book = (Book) parent.getAdapter().getItem(position);
-                        Intent intent = new Intent(SearchActivity.this, BookInfoActivity.class);
-                        intent.putExtra("BOOK", book);
-                        intent.putExtra("UID", uid);
-                        // Start the activity for a result so that we can update the list if a book is changed.
-                        startActivityForResult(intent, 1);
-                    }
-                });
+            // Initialize the listener for selecting a book.
+            listView.setOnItemClickListener((parent, view1, position, id) -> {
+                Book book = (Book) parent.getAdapter().getItem(position);
+                Intent intent = new Intent(SearchActivity.this, BookInfoActivity.class);
+                intent.putExtra("BOOK", book);
+                intent.putExtra("UID", uid);
+                // Start the activity for a result so that we can update the list if a book is changed.
+                startActivityForResult(intent, 1);
+            });
 
-            }
         });
 
 

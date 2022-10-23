@@ -30,9 +30,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -41,6 +39,7 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -49,8 +48,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
 /**
@@ -58,7 +55,6 @@ import java.util.ArrayList;
  * accessed, including book searches, requests, user profile viewing, etc.
  */
 public class MainActivity extends AppCompatActivity {
-    private ListView bookList;
     private ArrayAdapter<Book> bookAdapter;
     private ArrayList<Book> bookDataList;
     private UserDB users;
@@ -77,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         booksDB = new BookDB();
 
         // Initialize the list of books.
-        bookList = findViewById(R.id.book_list);
+        ListView bookList = findViewById(R.id.book_list);
         bookDataList = new ArrayList<>();
         ArrayList<String> user_ISBNs = currentUser.getBooks();
         for (String isbn : user_ISBNs) {
@@ -89,15 +85,12 @@ public class MainActivity extends AppCompatActivity {
         bookList.setAdapter(bookAdapter);
 
         // Launch BookInfoActivity to display information on a book chosen from the bookList.
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Book book = (Book) parent.getAdapter().getItem(position);
-                Intent intent = new Intent(MainActivity.this, BookInfoActivity.class);
-                intent.putExtra("BOOK", book);
-                intent.putExtra("UID", uid);
-                startActivityForResult(intent, 1);
-            }
+        bookList.setOnItemClickListener((parent, view, position, id) -> {
+            Book book = (Book) parent.getAdapter().getItem(position);
+            Intent intent = new Intent(MainActivity.this, BookInfoActivity.class);
+            intent.putExtra("BOOK", book);
+            intent.putExtra("UID", uid);
+            startActivityForResult(intent, 1);
         });
 
         // Initialize the controller for the navigation menu.
@@ -136,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             view.setText(String.valueOf(notificationCounter));
             view.setTextColor(Color.WHITE);
 
-            view.setBackground(getResources().getDrawable(R.drawable.shape));
+            view.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.shape, null));
         }
 
 
@@ -151,122 +144,114 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize the listener for clicking any item in the menu.
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NotNull MenuItem menuItem) {
-                        if (menuItem.getItemId() == R.id.menu_logout) {
-                            // If logout is clicked, sign the user out and return to the login screen.
-                            userAuth.signOut();
-                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
+                menuItem -> {
+                    if (menuItem.getItemId() == R.id.menu_logout) {
+                        // If logout is clicked, sign the user out and return to the login screen.
+                        userAuth.signOut();
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
 
-                        } else if (menuItem.getItemId() == R.id.menu_profile) {
-                            // If profile is selected, start a new intent with a bundle containing
-                            // the currentUser, the currentUser's profile, the associated UID, and
-                            // a flag communicating that the profile being displayed is owned by
-                            // the logged in user, then go to the profile screen.
-                            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("user", currentUser);
-                            bundle.putSerializable("profile", currentUser.getProfile());
-                            bundle.putString("UID", uid);
-                            bundle.putBoolean("fromSearch", false);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
+                    } else if (menuItem.getItemId() == R.id.menu_profile) {
+                        // If profile is selected, start a new intent with a bundle containing
+                        // the currentUser, the currentUser's profile, the associated UID, and
+                        // a flag communicating that the profile being displayed is owned by
+                        // the logged in user, then go to the profile screen.
+                        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("user", currentUser);
+                        bundle.putSerializable("profile", currentUser.getProfile());
+                        bundle.putString("UID", uid);
+                        bundle.putBoolean("fromSearch", false);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
 
-                        } else if (menuItem.getItemId() == R.id.menu_owned) {
-                            // If owned books is selected, start a new intent with a bundle
-                            // containing the currentUser's books and profile, as well as the
-                            // associated UID, then go to the owned books screen.
-                            Intent intent = new Intent(MainActivity.this, OwnedBookActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("ownedBooks", currentUser.getBooks());
-                            bundle.putSerializable("UID", uid);
-                            bundle.putSerializable("profile", currentUser.getProfile());
-                            intent.putExtras(bundle);
-                            startActivity(intent);
+                    } else if (menuItem.getItemId() == R.id.menu_owned) {
+                        // If owned books is selected, start a new intent with a bundle
+                        // containing the currentUser's books and profile, as well as the
+                        // associated UID, then go to the owned books screen.
+                        Intent intent = new Intent(MainActivity.this, OwnedBookActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("ownedBooks", currentUser.getBooks());
+                        bundle.putSerializable("UID", uid);
+                        bundle.putSerializable("profile", currentUser.getProfile());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
 
-                        } else if (menuItem.getItemId() == R.id.menu_notifications) {
-                            // If notifications are selected, start a new intent with a bundle
-                            // containing the currentUser's owned and accepted books, their profile
-                            // and UID. Then, go to the notification screen.
-                            Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("ownedBooks", currentUser.getBooks());
-                            bundle.putSerializable("UID", uid);
-                            bundle.putSerializable("profile", currentUser.getProfile());
-                            bundle.putSerializable("acceptedBooks", booksDB.getAcceptedBooks(uid));
-                            intent.putExtras(bundle);
-                            startActivity(intent);
+                    } else if (menuItem.getItemId() == R.id.menu_notifications) {
+                        // If notifications are selected, start a new intent with a bundle
+                        // containing the currentUser's owned and accepted books, their profile
+                        // and UID. Then, go to the notification screen.
+                        Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("ownedBooks", currentUser.getBooks());
+                        bundle.putSerializable("UID", uid);
+                        bundle.putSerializable("profile", currentUser.getProfile());
+                        bundle.putSerializable("acceptedBooks", booksDB.getAcceptedBooks(uid));
+                        intent.putExtras(bundle);
+                        startActivity(intent);
 
-                        } else if (menuItem.getItemId() == R.id.menu_scan) {
-                            // If scan is selected, start an intent with a bundle containing the UID
-                            // and go to the scan screen.
-                            Intent intent = new Intent(MainActivity.this, ScanActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("UID", uid);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
+                    } else if (menuItem.getItemId() == R.id.menu_scan) {
+                        // If scan is selected, start an intent with a bundle containing the UID
+                        // and go to the scan screen.
+                        Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("UID", uid);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
 
-                        } else if (menuItem.getItemId() == R.id.menu_borrowed) {
-                            // If borrowed books is selected, start a new intent with a bundle
-                            // containing the currentUser's profile and UID and go to the borrowed
-                            // books screen.
-                            Intent intent = new Intent(MainActivity.this, BorrowedBookActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("UID", uid);
-                            bundle.putSerializable("profile", currentUser.getProfile());
-                            intent.putExtras(bundle);
-                            startActivity(intent);
+                    } else if (menuItem.getItemId() == R.id.menu_borrowed) {
+                        // If borrowed books is selected, start a new intent with a bundle
+                        // containing the currentUser's profile and UID and go to the borrowed
+                        // books screen.
+                        Intent intent = new Intent(MainActivity.this, BorrowedBookActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("UID", uid);
+                        bundle.putSerializable("profile", currentUser.getProfile());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
 
-                        } else if (menuItem.getItemId() == R.id.menu_requested) {
-                            // If requested books is selected, start an intent with a bundle
-                            // containing the currentUser's profile and UID and go to the requested
-                            // books screen.
-                            Intent intent = new Intent(MainActivity.this, RequestedBookActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("UID", uid);
-                            bundle.putSerializable("profile", currentUser.getProfile());
-                            intent.putExtras(bundle);
-                            startActivity(intent);
+                    } else if (menuItem.getItemId() == R.id.menu_requested) {
+                        // If requested books is selected, start an intent with a bundle
+                        // containing the currentUser's profile and UID and go to the requested
+                        // books screen.
+                        Intent intent = new Intent(MainActivity.this, RequestedBookActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("UID", uid);
+                        bundle.putSerializable("profile", currentUser.getProfile());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
 
-                        } else if (menuItem.getItemId() == R.id.menu_accepted) {
-                            // If accepted books is selected, start an intent with a bundle
-                            // containing the currentUser's profile and UID and go to the accepted
-                            // books screen.
-                            Intent intent = new Intent(MainActivity.this, AcceptedBookActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("UID", uid);
-                            bundle.putSerializable("profile", currentUser.getProfile());
-                            intent.putExtras(bundle);
-                            startActivity(intent);
-                        }
-                        return true;
+                    } else if (menuItem.getItemId() == R.id.menu_accepted) {
+                        // If accepted books is selected, start an intent with a bundle
+                        // containing the currentUser's profile and UID and go to the accepted
+                        // books screen.
+                        Intent intent = new Intent(MainActivity.this, AcceptedBookActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("UID", uid);
+                        bundle.putSerializable("profile", currentUser.getProfile());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
                     }
+                    return true;
                 });
 
         //Sets up add book button
         final Button addBookButton = findViewById(R.id.addBook);
-        addBookButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //Starts AddBookActivity
-                Intent intent = new Intent(MainActivity.this, AddBookActivity.class);
-                intent.putExtra("UID", uid);
-                startActivityForResult(intent,1);
-            }
+        addBookButton.setOnClickListener(view -> {
+            //Starts AddBookActivity
+            Intent intent = new Intent(MainActivity.this, AddBookActivity.class);
+            intent.putExtra("UID", uid);
+            startActivityForResult(intent,1);
         });
 
         //Sets up search button
         final Button searchButton = findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Starts SearchActivity
-                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
-                intent.putExtra("UID", uid);
-                startActivity(intent);
-            }
+        searchButton.setOnClickListener(view -> {
+            //Starts SearchActivity
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+            intent.putExtra("UID", uid);
+            startActivity(intent);
         });
     }
 

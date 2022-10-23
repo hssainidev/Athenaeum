@@ -27,7 +27,6 @@ package com.example.athenaeum;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -41,24 +40,17 @@ import com.journeyapps.barcodescanner.CaptureActivity;
 public class ScanIsbn {
     /**
      * This function displays an alert dialog to the given activity
+     *
      * @param activity Contains the activity to display the dialog on.
-     * @param context Contains the context of the activity.
-     * @param result Contains the isbn code result.
+     * @param context  Contains the context of the activity.
+     * @param result   Contains the isbn code result.
      */
     public void displayDialog(final Activity activity, Context context, String result) {
         if (result != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setMessage(result);
             builder.setTitle("Scanning Result");
-            builder.setPositiveButton("Scan Again", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    scanCode(activity);
-                }
-            }).setNegativeButton("Choose This ISBN", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                }
+            builder.setPositiveButton("Scan Again", (dialogInterface, i) -> scanCode(activity)).setNegativeButton("Choose This ISBN", (dialogInterface, i) -> {
             });
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -69,6 +61,7 @@ public class ScanIsbn {
 
     /**
      * This function launches a camera to scan a code off of a book.
+     *
      * @param activity Contains the activity that initialized the scan.
      */
     public void scanCode(Activity activity) {
