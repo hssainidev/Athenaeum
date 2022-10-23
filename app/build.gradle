@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.athenaeum"
-        minSdkVersion 21
+        minSdkVersion 28
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
